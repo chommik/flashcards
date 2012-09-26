@@ -1,0 +1,285 @@
+/*  -moz-border-radius :5px;
+ -webkit-border-radius: 5px; */
+
+.navbar {
+    margin-bottom: 0;
+}
+#bg {
+    width: 94%;
+    height: 90%;
+    position: fixed;
+    top: 7%;
+    left: 3%;
+    z-index: -5;
+    border: 1.5px solid;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -webkit-box-shadow: 0px 0px 20px #000;
+    box-shadow: 0px 0px 20px #000;
+    opacity: 0.9;
+    margin: auto auto;
+    background-size: cover;
+}
+#frame {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: repeat url(/img/background.gif) center center;
+    z-index: -6
+}
+* {
+    font-family: 'Droid Sans', 'verdana', 'helvetica', sans-serif;
+    font-size: 13px;
+}
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+a:focus {
+    outline: none;
+}
+#downloadwallpaper {
+    position: fixed;
+    bottom: 5%;
+    z-index: 120;
+    right: 5%;
+    color: rgba(255,255,255,0.5);
+}
+#downloadwallpaper a {
+    color: rgba(255,255,255,0.4);
+}
+#clock, #clock * {
+    padding-top: 10px;
+    padding-bottom: 5px;
+    color: #fff;
+    width: 60%;
+    font-family: digit;
+    text-align: center;
+    font-size: 36px;
+    background: rgba(10,10,10,0.7);
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #000;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 10px #000;
+}
+#wrapper {
+    width: 100%;
+    display: table-cell;
+    vertical-align: middle;
+}
+#layout {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+body {
+    width: 100%;
+    height: 100%;
+    display: table;
+    position: fixed;
+}
+.widget {
+    margin-bottom: 25px;
+    margin-top: 25px;
+    padding: 5px;
+}
+div.header {
+    margin: 0;
+}
+.page {
+    display: none;
+}
+.page.active {
+    display: block;
+}
+
+.btn-mini {
+    padding: 2px 6px;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.widget {
+    background: rgba(10,10,10,0.7);
+    border: 1px solid #000;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 10px #000;
+    color: #ddd;
+}
+.widget .form-actions {
+    color: #eee;
+    background: rgba(230,230,230,0.4);
+}
+
+label,legend {
+    color: #ccc;
+}
+
+.widget *:not(.btn, input) {
+    color: #cecece;
+}
+.widget legend {
+    padding-left: 5%;
+    width: 95%;
+}
+.card {
+    background: rgba(230,230,230,0.8);
+    border: 1px solid #000;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 10px #000;
+    color: #ddd;
+    height: 250px;
+    min-width: 400px;
+    display: table;
+    margin: 0 auto;
+    -webkit-transition-duration: 0.3s;
+    -webkit-backface-visibility: hidden;
+    -moz-transition-duration: 0.3s;
+    -moz-backface-visibility: hidden;
+    padding: 0.5em;
+}
+.card.hidden {
+    -moz-transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+    -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+.card-aligner {
+    display: table-cell;
+    vertical-align: middle;
+}
+.card-word {
+    margin: 0 auto 15px auto;
+    width: 100%;
+    text-align: center;
+    color: #252525;
+    font-size: 60px;
+    line-height: 60px;
+    height: 30%;
+    display: inline-block;
+    word-wrap: break-word;
+}
+.card-input {
+    margin: 0 20px;
+    text-align: center;
+}
+.card-input input {
+    margin: 0 auto;
+    min-width: 400px;
+    text-align: center;
+    color: #252525;
+    font-size: 40px;
+    line-height: 50px;
+    height: 30%;
+}
+.card-buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+.card-stats {
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    margin-bottom: 0;
+    padding: 5px;
+}
+.card-control {
+    position: fixed;
+    bottom: 5%;
+    left: 5%;
+    margin-bottom: 0;
+    padding: 5px;
+}
+
+.card-remember-container {
+    position: fixed;
+    bottom: 5%;
+    left: 0;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+}
+
+.card-remember {
+    padding: 5px;
+    margin: 0 auto;
+    min-width: 30%;
+    text-align: center;
+    display: inline-block;
+    max-width: 60%;
+}
+
+.cent {
+    margin: 0 auto;
+    text-align: center;
+}
+.spacer {
+    margin-bottom: 0.3em;
+}
+#wordlist {
+    overflow-y: scroll;
+    max-height: 500px;
+    min-height: 150px;
+    padding: 5px;    
+}
+
+#wordlist-control {
+    padding: 5px;
+}
+
+#wordlist-control input {
+    text-align: center;
+    vertical-align: top;
+}
+
+#import-modal textarea {
+    width: 98%;
+    height: 15em;
+    font-family: monospace;
+}
+#debug-modal textarea {
+    width: 98%;
+    height: 15em;
+    font-family: monospace;
+}
+
+#export-modal textarea {
+    width: 98%;
+    height: 20em;
+    font-family: monospace;
+}
+
+.navbar .container {
+    margin-left: 60px;
+}
+
+label, input, button, select, textarea {
+    font-size: 13px;
+}
+
+.import-modal,.export-modal textarea {
+    width: 97%;    
+}
+
+.card-remember .e:not(:empty)::before {
+    
+    content: "Podano: ";
+    font-weight: bold;
+    display: block;
+}
+
+.card-remember .q:not(:empty)::before {
+    
+    content: "Zapamiętaj: ";
+    font-weight: bold;
+    display: block;
+}

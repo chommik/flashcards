@@ -274,12 +274,12 @@ label, input, button, select, textarea {
     
     content: "Podano: ";
     font-weight: bold;
-    display: block;
+    display: inline;
 }
 
 .card-remember .q:not(:empty)::before {
     
     content: "Zapamiętaj: ";
     font-weight: bold;
-    display: block;
+    display: inline;
 }

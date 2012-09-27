@@ -452,7 +452,7 @@ Flashcards = {
             State.wordset[$(this).data('var')] = value;
         });
         
-        $("#bg").css('background-image', 'url("' + Flashcards.config.get('wallpaper') + '")');
+        $("#bg").css('background-image', 'url(' + Flashcards.config.get('wallpaper') + ')');
         
         $(".card-buttons .submit").click(Flashcards.submitAnswer);
         $("#btn-start").click(Flashcards.startTraining);
@@ -522,49 +522,67 @@ Achievements = {
     data: {
         answer: {
             icon: "Ability_TownWatch.png",
-            title: "Odpowiedz na pytanie",
+            title: "Coś wiem!",
             description: "Podaj poprawną odpowiedź na pytanie." },
-            
         wrong: {
             icon: "Achievement_BG_AB_kill_in_mine.png",
             title: "Zła odpowiedź!",
             description: "Podaj złą odpowiedź na pytanie." },
-            
         fandf: {
             icon: "Spell_Fire_BlueRainOfFire.png",
             title: "Szybki i wściekły",
-            description: "Odpowiedz poprawnie na 3 pytania w ciągu 10 sekund."
-        },
+            description: "Odpowiedz poprawnie na 3 pytania w ciągu 10 sekund."},
         cancel: {
             icon: "ABILITY_SEAL.png",
             title: "Tchórz",
-            description: "Zakończ ćwiczenie przed końcem."
-        },
+            description: "Zakończ ćwiczenie przed końcem."},
         secretmode: {
             icon: "Achievement_Boss_CThun.png",
             title: "Dark Side of the Flashcards",
             description: "Otwórz okno debugowania Flashcards.",
             hidden: true },
         setka: {
-            icon: "INV_Stone_03.png",
+            icon: "INV_Alchemy_Elixir_03.png",
             title: "Setka",
             description: "Odpowiedz poprawnie na 100 pytań"},
+        pollitra: {
+            icon: "INV_Alchemy_Elixir_04.png",
+            title: "Pół litra",
+            description: "Odpowiedz poprawnie na 500 pytań"},
         stoprocent: {
             icon: "Achievement_Dungeon_UlduarRaid_Misc_06.png",
             title: "ĆZ 100%",
             description: "Ćwiczenie zrobione w 100% poprawnie."},
         ponad100: {
             icon: "INV_Misc_EngGizmos_27.png",
-            title: "Ponad 100%",
+            title: "Ponad 100% poprawnych",
             description: "It's not a bug, it's a feature.",
             hidden: true },
-        konfig: {
+        wallpaper: {
             icon: "INV_Fabric_Frostweave_Bolt.png",
-            title: "Tapeciar(a/rz)",
-            description: "Zmień tapetę na "
-        }
-        
+            title: "Tapeciara",
+            description: "Zmień tapetę na inną."},
+        readme: {
+            icon: "INV_Misc_Book_16.png",
+            title: "Dobrze poinformowany",
+            description: "Przeczytaj zakładkę „Informacje”",
+            hidden: true},
+        nocny: {
+            icon: "Achievement_Halloween_Cat_01.png",
+            title: "Nie spać, zwiedzać!",
+            description: "Otwórz Flashcards po północy",
+            hidden: true},
+        importer: {
+            icon: "Spell_Holy_PrayerOfFortitude.png",
+            title: "Importer",
+            description: "Zaimportuj paczkę z pytaniami"},
+        pustak: {
+            icon: "INV_Crate_03.png",
+            title: "Pustak",
+            description: "Pusta skrzynia za pustą odpowiedź!",
+            hidden: true},
         },
+        
         
     procs: {
         correct: {
@@ -586,17 +604,27 @@ Achievements = {
                 if (count == 100) Achievements.trigger('setka');
                 else if (count > 0) localStorage.achi_setka_count = count + 1;
                 else localStorage.achi_setka_count = 1;
+            },
+            pollitra: function() {
+                var count = parseInt(localStorage.achi_500_count)
+                if (count == 500) Achievements.trigger('pollitra');
+                else if (count > 0) localStorage.achi_500_count = count + 1;
+                else localStorage.achi_500_count = 1;
             }
         },
         wrong: {
             wrong: function() { Achievements.trigger('wrong') },
-            fandf: function() { State.achi.fandf_count = 0 }
+            fandf: function() { State.achi.fandf_count = 0 },
+            
         },
         cancel: {
             cancel: function() { Achievements.trigger('cancel') }
         },
         konami: {
             secretmode: function() { Achievements.trigger('secretmode') }
+        },
+        changeWallpaper: {
+            wallpaper: function() { Achievements.trigger('wallpaper') }
         },
         finish: {
             stoprocent: function() {
@@ -608,6 +636,21 @@ Achievements = {
                     Achievements.trigger('ponad100');
             }
         },
+        pageToggle: {
+            readme: function() {
+                if (arguments[0][1] == "info") Achievements.trigger("readme");
+            },
+            nocny: function() {
+                var now = new Date();
+                if (now.getHours() < 5 && now.getHours() >= 0) Achievements.trigger("nocny");
+            }
+        },
+        importList: {
+            importer: function() { Achievements.trigger('importer') }
+        },
+        answer: {
+            pustak: function() { if (arguments[0][1] == "") Achievements.trigger("pustak"); }
+        },
         
         all: []
     },
@@ -616,8 +659,6 @@ Achievements = {
         if (!Flashcards.config.get('achievementsEnable')) return false;
         
         var list = Achievements.getCompleted();
-        
-        console.log("Signalling: " + signal);
         
         for (i in Achievements.procs[signal]) {
             Achievements.procs[signal][i](arguments)

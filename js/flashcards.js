@@ -50,7 +50,6 @@ Flashcards = {
                 $('.card-remember .q').html('');
                 $('.card-remember .a').html('');
                 $(".card-remember .e").html('');
-                Flashcards.updateCard();
             }, Flashcards.config.get('rememberTime'));
             
             if (Flashcards.config.get("enableSound")) {
@@ -453,7 +452,7 @@ Flashcards = {
             State.wordset[$(this).data('var')] = value;
         });
         
-        $("#bg").css('background-image', 'url(' + Flashcards.config.get('wallpaper') + ')');
+        $("#bg").css('background-image', 'url("' + Flashcards.config.get('wallpaper') + '")');
         
         $(".card-buttons .submit").click(Flashcards.submitAnswer);
         $("#btn-start").click(Flashcards.startTraining);
@@ -479,7 +478,7 @@ Flashcards = {
         };
         Flashcards.config.set('wallpaper', url);
         $("#bg").fadeOut('slow');
-        $("#bg").css('background-image', 'url(' + url + ')');
+        $("#bg").css('background-image', url);
         $("#bg").fadeIn('slow');
         $("#input06").val(url);
         
@@ -559,6 +558,11 @@ Achievements = {
             title: "Ponad 100%",
             description: "It's not a bug, it's a feature.",
             hidden: true },
+        konfig: {
+            icon: "INV_Fabric_Frostweave_Bolt.png",
+            title: "Tapeciar(a/rz)",
+            description: "Zmień tapetę na "
+        }
         
         },
         

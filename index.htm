@@ -25,6 +25,9 @@
                                 <a href="#wordlist">Lista słów</a>
                             </li>
                             <li>
+                                <a href="#achi">Osiągnięcia</a>
+                            </li>
+                            <li>
                                 <a href="#config">Ustawienia</a>
                             </li>
                             <li>
@@ -56,8 +59,11 @@
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: 1.2.1
+                        Aktualna wersja: 1.3.0
                         <!-- Changelog:
+                            
+                        1.3.0:
+                        - Achievementy
                         
                         1.2.1:
                         - Dodane pole "podano"
@@ -86,7 +92,8 @@
                             <li><a href="/js/levenshtein.js">Levenshtein</a></li>
                         </ul>
                         <p>
-                            Tapety z Wikimedia Commons; wall.alphacoders.com
+                            Tapety z Wikimedia Commons; wall.alphacoders.com<br />
+                            Ikony osiągnięć &copy; Blizzard Entertainment — World of Warcraft
                         </p>
                         <pre>
 Copyright &copy; 2012 Rafal Macyszyn &lt;chommik12 at gmail dot com&gt;
@@ -243,6 +250,24 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                         </div>
                     </div>
                 </div>
+                
+                <div class="achievement">
+                    <div class="achi-header" id="achi-header-default">
+                        Zdobyte osiągnięcie!
+                    </div>
+                    <div class="achi-header" id="achi-header-hidden">
+                        Ukryte osiągnięcie!
+                    </div>
+                    <div class="achievement-toast">
+                        <div class="achi-icon">
+                            <img alt="Icon" />
+                        </div>
+                        <div class="achi-text">
+                            <div class="achi-title"></div>
+                            <div class="achi-description"></div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="modal hide" id="debug-modal" style="display: none">
                     <div class="modal-header">
@@ -260,6 +285,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                 </div>
           
                 <div class="page" id="page-config">
+
                     <div class="widget">
                         <form class="form-horizontal">
                             <fieldset>
@@ -325,6 +351,13 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                 </div>
                                 
                                 <div class="control-group">
+                                    <label class="control-label" for="input11">Włącz zdobywanie osiągnięć</label>
+                                    <div class="controls">
+                                        <input type="checkbox" id="input11" data-var="achievementsEnable" />
+                                    </div>
+                                </div>
+                                
+                                <div class="control-group">
                                     <label class="control-label" for="input07">Opcje dopasowania</label>
                                     <div class="controls">
                                         <label class="checkbox">
@@ -358,6 +391,23 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                         </form>
                     </div>
                 </div>
+                
+                <div class="page" id="page-achi">
+                    <div class="widget" id="achi-table">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="span1">#</th>
+                                    <th>Nazwa</th>
+                                    <th>Opis</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                               
                 <div id="frame">
                     <div id="bg"> </div>
                 </div>

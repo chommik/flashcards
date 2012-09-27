@@ -8,6 +8,8 @@ Flashcards = {
         
         $(".page").removeClass("active");
         $("#page-" + newpage).addClass("active");
+        
+        Achievements.signal('pageToggle', newpage);
     },
     submitAnswer: function() {
         if (Flashcards.config.get("enableAnim"))
@@ -19,10 +21,11 @@ Flashcards = {
         var current = State.currentList.shift().slice();
         if (current == undefined) {
             Flashcards.endTraining();
+            Achievements.signal('finish');
             return;
         }
         
-        console.log("submitted: '" + submitted + "'; current: '" + current + "'");
+        //console.log("submitted: '" + submitted + "'; current: '" + current + "'");
         
         if (!Flashcards.checkAnswer(submitted, current[1])) {
             
@@ -54,6 +57,8 @@ Flashcards = {
                 $("#snd-err")[0].play();
             }
             
+            Achievements.signal('wrong');
+            
         } else {
             if (current[2] == undefined) {
                 current[2] = 1;
@@ -72,6 +77,8 @@ Flashcards = {
             if (Flashcards.config.get("enableSound")) {
                 $("#snd-ok")[0].play();
             }
+            
+            Achievements.signal('correct');
         }
         
         State.currentList = shuffle(State.currentList);
@@ -82,6 +89,7 @@ Flashcards = {
             if (State.wordList.length == 0 && State.failedList.length == 0) {
                 Flashcards.updateCard();
                 Flashcards.endTraining();
+                Achievements.signal('finish');
                 return;
             }
             Flashcards.reflushCurrent();
@@ -93,6 +101,9 @@ Flashcards = {
                 $(".card").removeClass('hidden');    
             }, 600);
         }
+        
+        Achievements.signal('answer', submitted);
+        
         Flashcards.updateCard();
         Flashcards.updateStats();
     },
@@ -171,6 +182,8 @@ Flashcards = {
         $('#btn-stop').attr('disabled', false);
         
         $(".card input").focus();
+        
+        Achievements.signal('start');
     },
     
     endTraining: function() {
@@ -210,6 +223,8 @@ Flashcards = {
         });
         Flashcards.refreshWordList();
         $("#import-modal").modal('hide');
+        
+        Achievements.signal('importList');
     },
     
     addWord: function() {
@@ -220,12 +235,16 @@ Flashcards = {
             State.wordset.words = [];    
         }
         State.wordset.words.push([question, answer]);
-        Flashcards.appendWordlistTable(State.wordset.words.length - 1, question, answer)
+        Flashcards.appendWordlistTable(State.wordset.words.length - 1, question, answer);
+        
+        Achievements.signal('addWord');
     },
     
     exportList: function() {
         $("#export-modal textarea").val(JSON.stringify(State.wordset));
         $("#export-modal .tobase64").attr('disabled', false);
+        
+        Achievements.signal('exportList');
     },
     
     refreshWordList: function() {
@@ -327,6 +346,7 @@ Flashcards = {
                 JSON.stringify(window.localStorage)
                 );
             $("#debug-modal").modal({show: true});
+            Achievements.signal("konami");
         });
         $("#debug-clearconfig").click(function(){
             window.localStorage.clear();
@@ -395,6 +415,7 @@ Flashcards = {
                var current = $("#export-modal textarea").val();
                $("#export-modal textarea").val(b64_encode(current));
                $(this).attr("disabled", true);
+               Achievements.signal('toBase64');
            }
         });
         
@@ -436,7 +457,10 @@ Flashcards = {
         
         $(".card-buttons .submit").click(Flashcards.submitAnswer);
         $("#btn-start").click(Flashcards.startTraining);
-        $("#btn-stop").click(Flashcards.endTraining);
+        $("#btn-stop").click(function() {
+            Flashcards.endTraining();
+            Achievements.signal('cancel');
+        });
         
     },
     
@@ -458,6 +482,8 @@ Flashcards = {
         $("#bg").css('background-image', 'url(' + url + ')');
         $("#bg").fadeIn('slow');
         $("#input06").val(url);
+        
+        Achievements.signal('changeWallpaper', id);
     },
     
     config: {
@@ -486,6 +512,190 @@ Flashcards = {
     }
 };
 
+Achievements = {
+    
+    /*
+     * Supported events:
+     * finish, answer, pageToggle, correct, wrong, importList, addWord
+     * exportList, toBase64, cancel, changeWallpaper
+     */
+    
+    data: {
+        answer: {
+            icon: "Ability_TownWatch.png",
+            title: "Odpowiedz na pytanie",
+            description: "Podaj poprawną odpowiedź na pytanie." },
+            
+        wrong: {
+            icon: "Achievement_BG_AB_kill_in_mine.png",
+            title: "Zła odpowiedź!",
+            description: "Podaj złą odpowiedź na pytanie." },
+            
+        fandf: {
+            icon: "Spell_Fire_BlueRainOfFire.png",
+            title: "Szybki i wściekły",
+            description: "Odpowiedz poprawnie na 3 pytania w ciągu 10 sekund."
+        },
+        cancel: {
+            icon: "ABILITY_SEAL.png",
+            title: "Tchórz",
+            description: "Zakończ ćwiczenie przed końcem."
+        },
+        secretmode: {
+            icon: "Achievement_Boss_CThun.png",
+            title: "Dark Side of the Flashcards",
+            description: "Otwórz okno debugowania Flashcards.",
+            hidden: true },
+        setka: {
+            icon: "INV_Stone_03.png",
+            title: "Setka",
+            description: "Odpowiedz poprawnie na 100 pytań"},
+        stoprocent: {
+            icon: "Achievement_Dungeon_UlduarRaid_Misc_06.png",
+            title: "ĆZ 100%",
+            description: "Ćwiczenie zrobione w 100% poprawnie."},
+        ponad100: {
+            icon: "INV_Misc_EngGizmos_27.png",
+            title: "Ponad 100%",
+            description: "It's not a bug, it's a feature.",
+            hidden: true },
+        
+        },
+        
+    procs: {
+        correct: {
+            answer: function() { Achievements.trigger('answer') },
+            fandf: function() {
+                var now = Math.floor(Date.now()/1000);
+                var then = State.achi.fandf_time;
+                
+                if (now - then <= 10) {
+                    if (State.achi.fandf_count == 3) Achievements.trigger('fandf');
+                    else State.achi.fandf_count += 1;
+                } else {
+                  State.achi.fandf_count = 0;
+                  State.achi.fandf_time = now;  
+                }
+            },
+            setka: function() {
+                var count = parseInt(localStorage.achi_setka_count)
+                if (count == 100) Achievements.trigger('setka');
+                else if (count > 0) localStorage.achi_setka_count = count + 1;
+                else localStorage.achi_setka_count = 1;
+            }
+        },
+        wrong: {
+            wrong: function() { Achievements.trigger('wrong') },
+            fandf: function() { State.achi.fandf_count = 0 }
+        },
+        cancel: {
+            cancel: function() { Achievements.trigger('cancel') }
+        },
+        konami: {
+            secretmode: function() { Achievements.trigger('secretmode') }
+        },
+        finish: {
+            stoprocent: function() {
+                if (State.statistics.correct == State.statistics.submitted)
+                    Achievements.trigger('stoprocent');
+            },
+            ponad100: function() {
+                if (State.statistics.correct > State.statistics.submitted)
+                    Achievements.trigger('ponad100');
+            }
+        },
+        
+        all: []
+    },
+    
+    signal: function(signal) {
+        if (!Flashcards.config.get('achievementsEnable')) return false;
+        
+        var list = Achievements.getCompleted();
+        
+        console.log("Signalling: " + signal);
+        
+        for (i in Achievements.procs[signal]) {
+            Achievements.procs[signal][i](arguments)
+        }
+        for (i in Achievements.procs.all) {        
+            Achievements.procs.all[i](arguments)
+        }
+    },
+    
+    trigger: function(achi) {
+        
+        var data = Achievements.data[achi];
+        if (Achievements.isCompleted(achi)) return true;
+        
+        $(".achi-icon img").attr('src', '/img/icons/' + data.icon);
+        $(".achi-title").html(data.title);
+        $(".achi-description").html(data.description);
+        
+        $(".achievement").slideDown(400).delay(2500).fadeOut(400);
+        
+        if (data.hidden) $("#achi-header-hidden").delay(400).fadeIn();
+        else $("#achi-header-default").delay(400).fadeIn();
+        
+        $(".achi-header").delay(3000).fadeOut();
+        
+        var list = Achievements.getCompleted();
+        list.push(achi);
+        localStorage['achievements'] = list.join(';');
+        
+        Achievements.updateList();
+    },
+    
+    getCompleted: function() {
+        if (localStorage.achievements) return localStorage.achievements.split(';');
+        else return [];
+    },
+    
+    isCompleted: function(achi) {
+      if (localStorage != undefined) {
+          var list = Achievements.getCompleted();
+          if (list.indexOf(achi) >= 0) return true;
+          else return false;
+      } else {
+          return false;
+      }
+    },
+    
+    updateList: function() {
+        var table = document.querySelector("#achi-table tbody");
+        $(table).html("");
+        
+        for (i in Achievements.data) {
+            var completed = Achievements.isCompleted(i);
+            if (Achievements.data[i].hidden && !completed) continue;
+            
+            var row = document.createElement("tr");
+            
+            if (!completed) $(row).addClass("disabled");
+            
+            var icon = document.createElement("td");
+            var iconimg = document.createElement("img");
+                iconimg.src = "/img/icons/" + Achievements.data[i].icon;
+                icon.appendChild(iconimg);
+                row.appendChild(icon);
+            
+            var title = document.createElement("td");
+                title.innerHTML = Achievements.data[i].title;
+                row.appendChild(title);
+                
+            var description = document.createElement("td"); 
+                description.innerHTML = Achievements.data[i].description;
+                row.appendChild(description);
+                
+            table.appendChild(row);
+        }  
+    },
+    
+    init: function() {
+        Achievements.updateList();
+    }
+}
+
 DefaultConfig =  {
     replayFailedWords: 1,
     rememberTime: 3000,
@@ -497,6 +707,8 @@ DefaultConfig =  {
     matchPunctation: 1,
     repeatCount: 1,
     enableSound: 1,
+    incorrectShow: false,
+    achievementsEnable: true,
     wallpaper: "http://static-eu.chommik.net.pl/images/start-img/07/15.jpg"
 };
 
@@ -509,7 +721,6 @@ State = {
     totalWords: 0,
     doneWords: 0,
     curentWord: undefined,
-    incorrectShow: false,
     
     wordset: { },
     
@@ -517,6 +728,11 @@ State = {
         submitted: 0,
         wrong: 0,
         correct: 0
+    },
+    
+    achi: {
+        fandf_count: 0,
+        fandf_time: 0
     }
 };
 
@@ -527,4 +743,5 @@ Whoami = {
 
 $(function() {
     Flashcards.init();
+    Achievements.init();
 });

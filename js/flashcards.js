@@ -478,7 +478,7 @@ Flashcards = {
         };
         Flashcards.config.set('wallpaper', url);
         $("#bg").fadeOut('slow');
-        $("#bg").css('background-image', url);
+        $("#bg").css('background-image', "url(\"" + url + "\")");
         $("#bg").fadeIn('slow');
         $("#input06").val(url);
         

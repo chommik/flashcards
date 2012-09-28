@@ -352,25 +352,25 @@ label, input, button, select, textarea {
     bottom: 5%;
 }
 
-.achi-table {
+#achi-table {
     max-height: 600px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
 
-.achi-table tr td:nth-child(1) {
+#achi-table tr td:nth-child(1) {
     text-align: center;
 }
 
-.achi-table tr.disabled td {
+#achi-table tr.disabled td {
     color: #555;
 }
 
-.achi-table tr.disabled td img {
+#achi-table tr.disabled td img {
     opacity: 0.3;
 }
 
-.achi-table img {
+#achi-table img {
     width: 32px;
 }
 

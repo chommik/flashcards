@@ -600,7 +600,7 @@ Achievements = {
         jackpot: {
             icon: "spell_Shaman_convection.png",
             title: "Jackpot!",
-            description: "Odpowiedz popranie 20 razy z rzędu" },
+            description: "Odpowiedz poprawnie 20 razy z rzędu" },
         explorer: {
             icon: "INV_Jewelcrafting_StarOfElune_01.png",
             title: "Patrzcie, znalazłem!",

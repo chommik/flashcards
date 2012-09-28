@@ -182,6 +182,8 @@ Flashcards = {
         
         $(".card input").focus();
         
+        State.statistics.startTime = Math.floor(Date.now()/1000);
+        
         Achievements.signal('start');
     },
     
@@ -473,7 +475,12 @@ Flashcards = {
             case 4: url = '/img/wallp/4.jpg'; break;
             case 5: url = '/img/wallp/5.jpg'; break;
             case 6: url = '/img/wallp/6.jpg'; break;
-            case 7: url = 'http:​/​/​static-eu.chommik.net.pl/​images/​start-img/​11/​12.jpg'; break;
+            case 7: url = '/img/wallp/7.jpg'; break;
+            case 8: url = '/img/wallp/8.jpg'; break;
+            case 9: url = '/img/wallp/9.jpg'; break;
+            case 10: url = '/img/wallp/10.jpg'; break;
+            case 11: url = '/img/wallp/11.jpg'; break;
+            case 12: url = '/img/wallp/12.jpg'; break;
             default: url = id;
         };
         Flashcards.config.set('wallpaper', url);
@@ -500,6 +507,7 @@ Flashcards = {
         },
         set: function(item, value) {
             localStorage[item] = value;
+            Achievements.signal("configSet", item, value);
         },
         reset: function(item) {
             if (item in DefaultConfig) {
@@ -516,7 +524,7 @@ Achievements = {
     /*
      * Supported events:
      * finish, answer, pageToggle, correct, wrong, importList, addWord
-     * exportList, toBase64, cancel, changeWallpaper
+     * exportList, toBase64, cancel, changeWallpaper, start, configSet
      */
     
     data: {
@@ -561,26 +569,68 @@ Achievements = {
         wallpaper: {
             icon: "INV_Fabric_Frostweave_Bolt.png",
             title: "Tapeciara",
-            description: "Zmień tapetę na inną."},
+            description: "Zmień tapetę na inną." },
         readme: {
             icon: "INV_Misc_Book_16.png",
             title: "Dobrze poinformowany",
             description: "Przeczytaj zakładkę „Informacje”",
-            hidden: true},
+            hidden: true },
         nocny: {
             icon: "Achievement_Halloween_Cat_01.png",
             title: "Nie spać, zwiedzać!",
             description: "Otwórz Flashcards po północy",
-            hidden: true},
+            hidden: true },
         importer: {
             icon: "Spell_Holy_PrayerOfFortitude.png",
             title: "Importer",
-            description: "Zaimportuj paczkę z pytaniami"},
+            description: "Zaimportuj paczkę z pytaniami" },
         pustak: {
             icon: "INV_Crate_03.png",
             title: "Pustak",
             description: "Pusta skrzynia za pustą odpowiedź!",
-            hidden: true},
+            hidden: true },
+        wytrwaly: {
+            icon: "INV_Misc_Head_Dragon_Green.png",
+            title: "Wytrwały",
+            description: "Wykonaj ćwiczenie na ponad 100 pytań." },
+        blyskawica: {
+            icon: "Warrior_talent_icon_Thunderstruck.png",
+            title: "Błyskawica",
+            description: "Ukończ ćwiczenie ze średnią prędkością 12 słów/minutę lub większą." },
+        jackpot: {
+            icon: "spell_Shaman_convection.png",
+            title: "Jackpot!",
+            description: "Odpowiedz popranie 20 razy z rzędu" },
+        explorer: {
+            icon: "INV_Jewelcrafting_StarOfElune_01.png",
+            title: "Patrzcie, znalazłem!",
+            description: "Zdobądź ukryte osiągnięcie" },
+        prawie: {
+            icon: "Item_azereansphere.png",
+            title: "Prawie zdane",
+            description: "Zrób dokładnie jeden błąd na ponad 50 pytań." },
+        lekkie: {
+            icon: "INV_Feather_12.png",
+            title: "Lekkie jak piórko... albo nieco mniej",
+            description: "Załaduj paczkę o objętości powyżej 1000 znaków" },
+        sekretarz: {
+            icon: "INV_Misc_Book_17.png",
+            title: "Starszy sekretarz",
+            description: "Dodaj 100 pytań" },
+        hottentotten: {
+            icon: "Achievement_Boss_LordMarrowgar.png",
+            title: "Hottentotten…",
+            description: "Odpowiedz na pytanie odpowiedzią o długości powyżej 25 znaków",
+            hidden: true },
+        palce: {
+            icon: "Spell_Holy_SealOfSacrifice.png",
+            title: "Moje biedne palce…",
+            description: "Wpisz ponad 1000 znaków odpowiedzi w jednym uruchomieniu Flashcards." },
+        aimiejego: {
+            icon: "INV_Jewelcrafting_LivingRuby_01.png",
+            title: "A imię jego czterdzieści i cztery",
+            description: "Ukończ 44 ćwiczenia."
+        }
         },
         
         
@@ -610,11 +660,16 @@ Achievements = {
                 if (count == 500) Achievements.trigger('pollitra');
                 else if (count > 0) localStorage.achi_500_count = count + 1;
                 else localStorage.achi_500_count = 1;
-            }
+            },
+            jackpot: function() {
+                if (State.achi.jackpot_count == 20) Achievements.trigger('jackpot');
+                else State.achi.jackpot_count += 1;
+            },
         },
         wrong: {
             wrong: function() { Achievements.trigger('wrong') },
             fandf: function() { State.achi.fandf_count = 0 },
+            fandf: function() { State.achi.jackpot_count = 0 },
             
         },
         cancel: {
@@ -634,7 +689,26 @@ Achievements = {
             ponad100: function() {
                 if (State.statistics.correct > State.statistics.submitted)
                     Achievements.trigger('ponad100');
-            }
+            },
+            wytrwaly: function() {
+                if (State.wordset.words.length > 100) Achievements.trigger("wytrwaly");
+            },
+            blyskawica: function() {
+                var now = Math.floor(Date.now()/1000);
+                var speed = State.wordset.words.length / (now - State.statistics.startTime); // [words / second]
+                if (speed >= 0.1 /* 0.2 wps == 1 wpm */) Achievements.trigger('blyskawica');
+            },
+            prawie: function() {
+                if (State.wordset.words.length <= 50) return false;
+                if (State.statistics.submitted - State.statistics.correct == 1)
+                    Achievements.trigger('prawie');
+            },
+            aimiejego: function() {
+                var count = parseInt(localStorage.achi_aimiejego_count)
+                if (count == 44) Achievements.trigger('aimiejego');
+                else if (count > 0) localStorage.achi_aimiejego_count = count + 1;
+                else localStorage.achi_aimiejego_count = 1;
+            },
         },
         pageToggle: {
             readme: function() {
@@ -646,13 +720,34 @@ Achievements = {
             }
         },
         importList: {
-            importer: function() { Achievements.trigger('importer') }
+            importer: function() { Achievements.trigger('importer') },
+            lekkie: function() {
+                if ($("#import-modal textarea").val().length > 1000) Achievements.trigger('lekkie');
+            },
         },
         answer: {
-            pustak: function() { if (arguments[0][1] == "") Achievements.trigger("pustak"); }
+            pustak: function() { if (arguments[0][1] == "") Achievements.trigger("pustak"); },
+            hottentotten: function() { if (arguments[0][1].length > 25) Achievements.trigger('hottentotten') },
+            palce: function() {
+                State.achi.palce_count += arguments[0][1].length;
+                if (State.achi.palce_count >= 1000) Achievements.trigger('palce');
+            },
+        },
+        achievement: {
+            explorer: function() {
+                var achi = Achievements.data[arguments[0][1]];
+                if (achi.hidden) Achievements.trigger('explorer');
+            },
+        },
+        addWord: {
+            sekretarz: function() {
+                var count = parseInt(localStorage.achi_sekretarz_count)
+                if (count == 100) Achievements.trigger('sekretarz');
+                else if (count < 100) localStorage.achi_sekretarz_count = count + 1;
+                else localStorage.achi_sekretarz_count = 1;
+            }
         },
         
-        all: []
     },
     
     signal: function(signal) {
@@ -694,6 +789,8 @@ Achievements = {
         var list = Achievements.getCompleted();
         list.push(achi);
         localStorage['achievements'] = list.join(';');
+        
+        Achievements.signal('achievement', achi); // We need to go deeper.
         
         Achievements.updateList();
     },
@@ -763,7 +860,7 @@ DefaultConfig =  {
     enableSound: 1,
     incorrectShow: false,
     achievementsEnable: true,
-    wallpaper: "/img/wallp/1.png"
+    wallpaper: "/img/wallp/1.jpg"
 };
 
 State = {
@@ -781,12 +878,15 @@ State = {
     statistics: {
         submitted: 0,
         wrong: 0,
-        correct: 0
+        correct: 0,
+        failedWords: {}, // in format of {word: count, ...}
+        startTime: 0, // unix timestamp
     },
     
     achi: {
         fandf_count: 0,
-        fandf_time: 0
+        fandf_time: 0,
+        palce_count: 0
     }
 };
 

@@ -341,34 +341,39 @@ label, input, button, select, textarea {
     font-weight: bold;
     text-shadow: #000 2px 2px 2px;
     margin: 0 auto;
+    margin-top: 40px;
 }
 
-.achievement {
+#achievement-container {
     position: fixed;
+    min-width: 0;
     width: 100%;
     left: 0;
     bottom: 5%;
-    display: none;
 }
 
-#achi-table {
+.achi-table {
     max-height: 600px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
 
-#achi-table tr td:nth-child(1) {
+.achi-table tr td:nth-child(1) {
     text-align: center;
 }
 
-#achi-table tr.disabled td {
+.achi-table tr.disabled td {
     color: #555;
 }
 
-#achi-table tr.disabled td img {
+.achi-table tr.disabled td img {
     opacity: 0.3;
 }
 
-#achi-table img {
+.achi-table img {
     width: 32px;
+}
+
+#achi-default {
+    display: none;
 }

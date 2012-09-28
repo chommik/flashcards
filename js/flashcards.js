@@ -429,7 +429,7 @@ Flashcards = {
         
         $("#page-config input[data-var]").change(function(e) {
             if ($(this).data('var') == "wallpaper") { 
-                Flashcards.setWallpaper("url(\""+$(this).val()+"\")");
+                Flashcards.setWallpaper($(this).val());
                 return;
             }
             
@@ -452,7 +452,7 @@ Flashcards = {
             State.wordset[$(this).data('var')] = value;
         });
         
-        $("#bg").css('background-image', 'url(' + Flashcards.config.get('wallpaper') + ')');
+        $("#bg").css('background-image', 'url("' + Flashcards.config.get('wallpaper') + '")');
         
         $(".card-buttons .submit").click(Flashcards.submitAnswer);
         $("#btn-start").click(Flashcards.startTraining);
@@ -478,7 +478,7 @@ Flashcards = {
         };
         Flashcards.config.set('wallpaper', url);
         $("#bg").fadeOut('slow');
-        $("#bg").css('background-image', "url(\"" + url + "\")");
+        $("#bg").css('background-image', 'url("' + url + '")');
         $("#bg").fadeIn('slow');
         $("#input06").val(url);
         
@@ -673,16 +673,23 @@ Achievements = {
         var data = Achievements.data[achi];
         if (Achievements.isCompleted(achi)) return true;
         
-        $(".achi-icon img").attr('src', '/img/icons/' + data.icon);
-        $(".achi-title").html(data.title);
-        $(".achi-description").html(data.description);
+        var achi_div = document.querySelector("#achi-default").cloneNode(true);
+        achi_div.removeAttribute("id");
         
-        $(".achievement").slideDown(400).delay(2500).fadeOut(400);
+        $(achi_div).find(".achi-icon img").attr('src', '/img/icons/' + data.icon);
+        $(achi_div).find(".achi-title").html(data.title);
+        $(achi_div).find(".achi-description").html(data.description);
         
-        if (data.hidden) $("#achi-header-hidden").delay(400).fadeIn();
-        else $("#achi-header-default").delay(400).fadeIn();
+        document.querySelector("#achievement-container").appendChild(achi_div);
         
-        $(".achi-header").delay(3000).fadeOut();
+        $(achi_div).slideDown(400).delay(2600).fadeOut(400);
+        
+        if (data.hidden) $(achi_div).find(".achi-header-hidden").delay(400).fadeIn(400);
+        else $(achi_div).find(".achi-header-default").delay(400).fadeIn(400).delay(3200);
+        
+        setTimeout(function(achi_div) {
+            achi_div.parentNode.removeChild(achi_div);
+        }, 4000, achi_div);
         
         var list = Achievements.getCompleted();
         list.push(achi);
@@ -692,17 +699,18 @@ Achievements = {
     },
     
     getCompleted: function() {
-        if (localStorage.achievements) return localStorage.achievements.split(';');
-        else return [];
+        if (State.achi.list == undefined) {
+            if (localStorage.achievements != undefined) State.achi.list = localStorage['achievements'].split(';');
+            else State.achi.list = [];
+        }
+        return State.achi.list;
     },
     
     isCompleted: function(achi) {
-      if (localStorage != undefined) {
-          var list = Achievements.getCompleted();
-          if (list.indexOf(achi) >= 0) return true;
+      if (!State.achi.list) return false;
+      else {
+          if (State.achi.list.indexOf(achi) >= 0) return true;
           else return false;
-      } else {
-          return false;
       }
     },
     
@@ -738,6 +746,7 @@ Achievements = {
     
     init: function() {
         Achievements.updateList();
+        
     }
 }
 
@@ -754,7 +763,7 @@ DefaultConfig =  {
     enableSound: 1,
     incorrectShow: false,
     achievementsEnable: true,
-    wallpaper: "http://static-eu.chommik.net.pl/images/start-img/07/15.jpg"
+    wallpaper: "/img/wallp/1.png"
 };
 
 State = {

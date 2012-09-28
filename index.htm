@@ -58,12 +58,12 @@
                 <div class="page" id="page-info">
                     <div class="well">
                         <h1>Flashcards</h1>
-                        <!-- WERSJA -->
+                        <!-- WERSJA
                         Aktualna wersja: 1.3.1
-                        <!-- Changelog:
                             
                         1.3.1:
                         - Więcej achievementów
+                        - Obsługa więcej niż jednego osiągnięcia na ekranie
                             
                         1.3.0:
                         - Achievementy
@@ -254,20 +254,22 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                     </div>
                 </div>
                 
-                <div class="achievement">
-                    <div class="achi-header" id="achi-header-default" style="display: none">
-                        Zdobyte osiągnięcie!
-                    </div>
-                    <div class="achi-header" id="achi-header-hidden" style="display: none">
-                        Ukryte osiągnięcie!
-                    </div>
-                    <div class="achievement-toast">
-                        <div class="achi-icon">
-                            <img alt="Icon" />
+                <div id="achievement-container">
+                    <div class="achievement" id="achi-default" style="display: none">
+                        <div class="achi-header achi-header-default" style="display: none">
+                            Zdobyte osiągnięcie!
                         </div>
-                        <div class="achi-text">
-                            <div class="achi-title"></div>
-                            <div class="achi-description"></div>
+                        <div class="achi-header achi-header-hidden" style="display: none">
+                            Ukryte osiągnięcie!
+                        </div>
+                        <div class="achievement-toast">
+                            <div class="achi-icon">
+                                <img alt="Icon" />
+                            </div>
+                            <div class="achi-text">
+                                <div class="achi-title"></div>
+                                <div class="achi-description"></div>
+                            </div>
                         </div>
                     </div>
                 </div>

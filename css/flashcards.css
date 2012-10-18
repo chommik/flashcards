@@ -377,3 +377,9 @@ label, input, button, select, textarea {
 #achi-default {
     display: none;
 }
+
+@media screen and (max-height: 700px) {
+    #wordlist {
+        max-height: 300px;
+    }
+}

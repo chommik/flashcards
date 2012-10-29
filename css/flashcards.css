@@ -1,6 +1,43 @@
 /*  -moz-border-radius :5px;
  -webkit-border-radius: 5px; */
 
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), url("/fnt/OpenSans-Bold.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), url("/fnt/OpenSans-Regular.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Open Sans Bold Italic'), url("/fnt/OpenSans-BoldItalic.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Open Sans Light Italic'), url("/fnt/OpenSans-LightItalic.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: normal;
+  src: local('Open Sans Italic'), url("/fnt/OpenSans-Italic.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Open Sans'), url("/fnt/OpenSans-Regular.ttf");
+}
+
 .navbar {
     margin-bottom: 0;
 }
@@ -30,7 +67,7 @@
     z-index: -6
 }
 * {
-    font-family: 'Droid Sans', 'verdana', 'helvetica', sans-serif;
+    font-family: 'Open Sans', 'Droid Sans', 'verdana', 'helvetica', sans-serif;
     font-size: 13px;
 }
 a {
@@ -260,6 +297,7 @@ label,legend {
 
 .navbar .container {
     margin-left: 60px;
+    width: auto;
 }
 
 label, input, button, select, textarea {
@@ -382,4 +420,41 @@ label, input, button, select, textarea {
     #wordlist {
         max-height: 300px;
     }
+}
+
+#loading {
+    padding: 7px 10px;
+    display: none;
+}
+
+#brand {
+    font-size: 600%;
+    color: #ccc;
+    text-shadow: 6px 6px 6px rgba(0, 0, 0, 0.8);
+    font-weight: 300;
+}
+
+.navbar .brand {
+    font-weight: 400;
+}
+
+.card-input input {
+    font-weight: 300;
+    font-family: inherit;
+}
+
+.card-word {
+    font-weight: 300;
+}
+
+.font-300 * {
+    font-weight: 300;
+}
+
+.font-300 strong {
+    font-weight: bold;
+}
+
+.font-classic * {
+    font-family: 'Droid Sans', 'verdana', 'helvetica', sans-serif !important;
 }

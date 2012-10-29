@@ -13,7 +13,7 @@
         <div class="navbar navbar-fixed-top navbar-inverse">
             <div class="navbar-inner">
                 <div class="container">
-                    <a class="brand" href="#main">Flashcards</a>
+                    <a class="font-300 brand" href="#main">Flashcards</a>
                     <div class="nav-collapse">
                         <ul class="nav">
                             <li>
@@ -37,6 +37,11 @@
                                 <a href="#info">Informacje</a>
                             </li>
                         </ul>
+                        <ul class="nav pull-right">
+                            <li>
+                                <img id="loading" src="/img/loading2.gif">
+                            </li>
+                        </ul>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
@@ -45,7 +50,7 @@
             <div id="layout">
                 
                 <div class="page" id="page-main">
-                    <h1>Flashcards</h1>
+                    <div id="brand">Flashcards</div>
                     <div class="widget" style="padding: 10px; width: 40%;">
                         <div style="font-size: 150%">Jak zacząć</div>
                         <ul>
@@ -59,9 +64,13 @@
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: 1.3.2
+                        Aktualna wersja: 1.3.3
                         <!--
-                            
+                        1.3.3:
+                        - Nowa czcionka
+                        - Wybór nowa/stara czcionka
+                        - Odwracanie listy
+                        
                         1.3.2:
                         - Więcej tapet, oznaczenie żółtym kolorem dużych plików
                         - Jeszcze więcej achievementów
@@ -223,6 +232,10 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                             <div class="btn btn-small" id="wordlist-export">Eksport</div>
                             <div class="btn btn-small" id="wordlist-import">Import</div>
                             
+                            <span style="margin-left: 4em;">Narzędzia — </span>
+                            <div class="btn btn-small" id="wordlist-reverse"
+                            rel="tooltip" title="Zamień pytanie ←→ odpowiedź">Odwróć</div>
+                            
                         </div>
                     </div>
                     
@@ -252,9 +265,8 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                             <textarea></textarea>
                         </div>
                         <div class="modal-footer">
-                            <div class="btn btn-primary" data-dismiss="modal">Zamknij</div>
                             <div class="btn selectall">Zaznacz tekst</div>
-                            <div class="btn tobase64">Spakuj do Base64</div>
+                            <div class="btn btn-primary" data-dismiss="modal">Zamknij</div>
                         </div>
                     </div>
                 </div>
@@ -380,6 +392,16 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                         </label>
                                     </div>
                                 </div>
+                                
+                                <div class="control-group">
+                                    <label class="control-label" for="input12">Opcje czcionek</label>
+                                    <div class="controls">
+                                        <input type="checkbox" id="input12" data-var="font300" /> — lekka <br />
+                                        <input type="checkbox" id="input13" data-var="fontOld" /> — klasyczna
+                                    </div>
+                                </div>
+                                
+                                
                                 </div>
                                 </div>                                
                                 <div class="control-group">

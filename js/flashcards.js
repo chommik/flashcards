@@ -200,32 +200,34 @@ Flashcards = {
     
     importList: function() {
         var text = $("#import-modal textarea").val().trim();
+        var newList = false;
         
-        if (text[0] != "{") {
-            var decoded = b64_decode(text.trim().replace(/\n/g,""));
-            if (decoded[0] == "{") {
-                text = decoded;
-            } else {
-                $.notifyBar({
-                    html: "Błędna paczka.",
-                    cls: "error",
-                    delay: 1500
-                });
-                
-                return;                
-            }
-        }
-        
-        newList = JSON.parse(text);
-        State.wordset = newList;
-        $.notifyBar({
-               html: "Załadowano nowe słowa.",
-               delay: 1500
-        });
-        Flashcards.refreshWordList();
+        $("#loading").show();
         $("#import-modal").modal('hide');
         
-        Achievements.signal('importList');
+        try {
+            newList = JSON.parse(text);
+        } catch(err) { }
+        
+        
+        if (!newList) {        
+            $.notifyBar({
+                html: "Błędna paczka.",
+                cls: "error",
+                delay: 1500
+            });
+            
+        } else {
+            State.wordset = newList;
+            Flashcards.refreshWordList();
+            
+            $.notifyBar({
+                   html: "Załadowano nowe słowa.",
+                   delay: 1500
+            });
+            Achievements.signal('importList');
+        }
+        $("#loading").hide();
     },
     
     addWord: function() {
@@ -239,6 +241,7 @@ Flashcards = {
         Flashcards.appendWordlistTable(State.wordset.words.length - 1, question, answer);
         
         Achievements.signal('addWord');
+        $("#wordlist").scrollTop(99999999999);
     },
     
     exportList: function() {
@@ -249,10 +252,14 @@ Flashcards = {
     },
     
     refreshWordList: function() {
+        $("#loading").show();
+        $("#wordlist").hide();
         $("#wordlist table tbody tr").remove();
         for (i in State.wordset.words) {
             Flashcards.appendWordlistTable(i, State.wordset.words[i][0], State.wordset.words[i][1])
         }
+        $("#wordlist").show();
+        $("#loading").fadeOut('fast');
     },
     
     appendWordlistTable: function(id, question, answer) {
@@ -284,7 +291,25 @@ Flashcards = {
         tr.appendChild(removeTd);
         
         $("#wordlist table tbody").append(tr);
-        $("#wordlist").scrollTop(99999999999);
+    },
+    
+    reverseList: function() {
+        
+        var newList = [];
+        
+        if (!!State.wordset.words && State.wordset.words.length > 0) {
+            $("#loading").show();
+            
+            for (word in State.wordset.words) {
+                newList.push([State.wordset.words[word][1], State.wordset.words[word][0]])
+            }
+            
+            State.wordset.words = newList;
+            
+            Flashcards.refreshWordList();
+            
+            $("#loading").fadeOut('fast');
+        }
     },
     
     updateStats: function() {
@@ -327,6 +352,11 @@ Flashcards = {
         document.querySelector("#control-wrong span").innerHTML = !isNaN(wrong) ? wrong.toString() : "--"; 
     },
     
+    updateFontSetting: function() {
+        Flashcards.config.get('font300') ? $("body").addClass("font-300") : $("body").removeClass("font-300");
+        Flashcards.config.get('fontOld') ? $("body").addClass("font-classic") : $("body").removeClass("font-classic");
+    },
+    
     init: function() {
         $(window).bind("hashchange", Flashcards.togglePage);
         $(window).trigger("hashchange");
@@ -339,6 +369,8 @@ Flashcards = {
            minWidth: 400,
            maxWidth: 800 
         });
+        
+        $("*[rel=tooltip]").tooltip();
 
         $(window).konami(function(){
             $("#debug-modal textarea").val(
@@ -411,14 +443,7 @@ Flashcards = {
            $("#export-modal textarea").select();
         });
         
-        $("#export-modal .tobase64").click(function(e) {
-           if ($(this).attr("disabled") != "disabled") {
-               var current = $("#export-modal textarea").val();
-               $("#export-modal textarea").val(b64_encode(current));
-               $(this).attr("disabled", true);
-               Achievements.signal('toBase64');
-           }
-        });
+        $("#wordlist-reverse").click(Flashcards.reverseList);
         
         $("input[data-var]").each(function(i, item) {
             if ($(this).attr('type') == 'checkbox') {
@@ -443,6 +468,9 @@ Flashcards = {
             console.log($(this).data('var'));
             Flashcards.config.set($(this).data('var'), value);
         });
+        
+        $("#input12,#input13").change(Flashcards.updateFontSetting);
+        Flashcards.updateFontSetting();
         
         $(".wordlist-setting").change(function(e) {
             var value = $(this).val();
@@ -849,6 +877,8 @@ Achievements = {
 
 DefaultConfig =  {
     replayFailedWords: 1,
+    font300: 0,
+    fontOld: 0,
     rememberTime: 3000,
     wordListChunk: 20,
     quizMode: 0,
@@ -860,7 +890,7 @@ DefaultConfig =  {
     enableSound: 1,
     incorrectShow: false,
     achievementsEnable: true,
-    wallpaper: "/img/wallp/1.jpg"
+    wallpaper: "/img/wallp/8.jpg"
 };
 
 State = {

@@ -4,19 +4,19 @@
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
-  font-weight: 700;
+  font-weight: bold;
   src: local('Open Sans Bold'), url("/fnt/OpenSans-Bold.ttf");
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 300;
-  src: local('Open Sans Light'), url("/fnt/OpenSans-Regular.ttf");
+  src: local('Open Sans Light'), url("/fnt/OpenSans-Light.ttf");
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: italic;
-  font-weight: 700;
+  font-weight: bold;
   src: local('Open Sans Bold Italic'), url("/fnt/OpenSans-BoldItalic.ttf");
 }
 @font-face {

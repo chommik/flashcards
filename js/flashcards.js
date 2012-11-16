@@ -391,6 +391,7 @@ Flashcards = {
     clearList: function() {
         State.wordset = { };
         Flashcards.refreshWordList();  
+        Flashcards.refreshMetadata();
     },
     
     updateFontSetting: function() {

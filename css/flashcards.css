@@ -458,3 +458,12 @@ label, input, button, select, textarea {
 .font-classic * {
     font-family: 'Droid Sans', 'verdana', 'helvetica', sans-serif !important;
 }
+
+.hidden {
+    display: none;
+}
+
+.center {
+    text-align: center;
+    margin: inherit auto;
+}

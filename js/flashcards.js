@@ -46,7 +46,8 @@ Flashcards = {
                 $(".card-remember .e").html(submitted);
             }
             
-            setTimeout(function() {
+            if (State.lastTimeout != 0) clearTimeout(State.lastTimeout);
+            State.lastTimeout = setTimeout(function() {
                 $('.card-remember .q').html('');
                 $('.card-remember .a').html('');
                 $(".card-remember .e").html('');
@@ -107,7 +108,24 @@ Flashcards = {
         Flashcards.updateStats();
     },
     
-    checkAnswer: function(a, b) {
+    checkAnswer: function(a, b) { // a: answer, b: question
+          if (State.wordset.regexp == 1) {
+              var flags = Flashcards.config.get('matchCase') ? "i" : "";
+              // Przerobienie "uproszczonej" formy regexpa na prawidłową
+              var chunks = b.split('/');
+              for (i in chunks)
+              {
+                  chunks[i] = chunks[i].replace(/\((.+)\) (.+)/, '($1 |)$2');
+              }
+              if (chunks.length > 1)
+              {
+                  var str = "^((" + chunks.join('|') + ")(\/|)){" + chunks.length + "}$";
+              } else {
+                  var str = "^" + chunks[0] + "$";
+              }
+              var regexp = RegExp(str, flags);
+              return a.match(regexp) != null;
+          }
           if (!Flashcards.config.get('matchCase')) {
               if (a.toLowerCase() == b.toLowerCase()) return true;
           }
@@ -206,9 +224,20 @@ Flashcards = {
         $("#import-modal").modal('hide');
         
         try {
-            newList = JSON.parse(text);
-        } catch(err) { }
-        
+            if (text[0] != "{") {
+                var tempList = text.split('\n');
+                var temp2List = []
+                for (i in tempList) {
+                    var word = tempList[i].split(';')
+                    if (word.length != 2) throw false;
+                    temp2List.push(word);
+                }
+                newList = { words: temp2List };
+            } 
+            else {
+                newList = JSON.parse(text);
+            }
+        } catch(err) { var newList = false; }
         
         if (!newList) {        
             $.notifyBar({
@@ -262,6 +291,12 @@ Flashcards = {
         $("#loading").fadeOut('fast');
     },
     
+    refreshMetadata: function() {
+        $(".wordlist-setting[data-var=title]").val(State.wordset.title);
+        $(".wordlist-setting[data-var=author]").val(State.wordset.author);
+        State.wordset.regexp == 1 ? $(".wordlist-setting[data-var=regexp]").addClass("active") : undefined
+    },
+    
     appendWordlistTable: function(id, question, answer) {
         var tr = document.createElement("tr");
         var num = document.createElement("td");
@@ -276,14 +311,7 @@ Flashcards = {
         var removeTd = document.createElement("td");
         removeTd.innerHTML = "<a class=\"btn btn-mini wordlist-remove\" data-id=\"" + id + "\"><i class=\"icon-minus-sign\"></i>Usuń</a>";
         
-        $(removeTd).click(function() {
-            var arrayId = parseInt($(this).find("a").data('id'));
-            delete State.wordset.words[arrayId];
-            State.wordset.words = State.wordset.words.slice(); // Some dirty hacks
-            State.wordset.words = State.wordset.words.filter(function(x){ return x != undefined});
-                // Don't know why too. 
-            Flashcards.refreshWordList();
-        });
+        
         
         tr.appendChild(num);
         tr.appendChild(questionTd);
@@ -350,6 +378,11 @@ Flashcards = {
         document.querySelector("#control-progress span").innerHTML = !isNaN(progress) ? progress.toString() : "--";
         document.querySelector("#control-correct span").innerHTML = !isNaN(correct) ? correct.toString() : "--";
         document.querySelector("#control-wrong span").innerHTML = !isNaN(wrong) ? wrong.toString() : "--"; 
+    },
+    
+    clearList: function() {
+        State.wordset = { };
+        Flashcards.refreshWordList();  
     },
     
     updateFontSetting: function() {
@@ -477,8 +510,14 @@ Flashcards = {
             if ($(this).attr('type') == 'checkbox') {
                 value = $(this).attr('checked') ? 1 : 0;
             }
-            console.log(value);
-            console.log($(this).data('var'));
+            State.wordset[$(this).data('var')] = value;
+        });
+        
+        $('.wordlist-setting.btn').click(function() {
+           if ($(this).hasClass('btn')) {
+               $(this).toggleClass('active')
+               value = $(this).hasClass('active') ? 1 : 0;
+            }
             State.wordset[$(this).data('var')] = value;
         });
         
@@ -489,6 +528,50 @@ Flashcards = {
         $("#btn-stop").click(function() {
             Flashcards.endTraining();
             Achievements.signal('cancel');
+        });
+        
+        $("#btn-pause").click(function() {
+            Achievements.trigger('nothing');
+        });
+        
+        $("#confirm-clear .btn").click(function() {
+           Flashcards.clearList(); 
+        });
+        
+        $("*[rel=popover]").popover();
+        
+        $("#wordlist-purge").click(function() {
+            $("#wordlist-purge").popover('toggle');
+        });
+        
+        $("body").on('click', '#wordlist-purge-cancel', function() {
+            $("#wordlist-purge").popover('hide');
+        });
+        
+        $("body").on('click', '#wordlist-purge-confirm', function() {
+            Flashcards.clearList();
+        });
+        
+        $("#wordlist").on('click', '.wordlist-remove', function() {
+            var arrayId = parseInt($(this).data('id'));
+            delete State.wordset.words[arrayId];
+            State.wordset.words = State.wordset.words.slice(); // Some dirty hacks
+            State.wordset.words = State.wordset.words.filter(function(x){ return x != undefined});
+                // Don't know why too. 
+            Flashcards.refreshWordList();
+        });
+        
+        $(window).unload(function() {
+           localStorage.wordset = JSON.stringify(State.wordset);
+        });
+        
+        $(window).load(function() {
+           if (localStorage.wordset != undefined) {
+               State.wordset = JSON.parse(localStorage.wordset);
+               localStorage.removeItem("wordset");
+               Flashcards.refreshWordList();
+               Flashcards.refreshMetadata();
+           } 
         });
         
     },
@@ -658,7 +741,12 @@ Achievements = {
             icon: "INV_Jewelcrafting_LivingRuby_01.png",
             title: "A imię jego czterdzieści i cztery",
             description: "Ukończ 44 ćwiczenia."
-        }
+        },
+        nothing: {
+            icon: "Ability_Druid_Eclipse.png",
+            title: "Obmacywacz",
+            description: "Obmacując przyciski znajdź ten, który nie robi nic."
+        },
         },
         
         
@@ -708,6 +796,9 @@ Achievements = {
         },
         changeWallpaper: {
             wallpaper: function() { Achievements.trigger('wallpaper') }
+        },
+        nothing: {
+            nothing: function() { Achievements.trigger('nothing') }
         },
         finish: {
             stoprocent: function() {
@@ -873,7 +964,8 @@ Achievements = {
         Achievements.updateList();
         
     }
-}
+    
+};
 
 DefaultConfig =  {
     replayFailedWords: 1,
@@ -890,6 +982,7 @@ DefaultConfig =  {
     enableSound: 1,
     incorrectShow: false,
     achievementsEnable: true,
+    separator: ';',
     wallpaper: "/img/wallp/8.jpg"
 };
 
@@ -917,7 +1010,9 @@ State = {
         fandf_count: 0,
         fandf_time: 0,
         palce_count: 0
-    }
+    },
+    
+    lastTimeout: 0,
 };
 
 Whoami = {

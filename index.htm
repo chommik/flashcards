@@ -64,8 +64,16 @@
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: 1.3.3
+                        Aktualna wersja: 1.3.4
                         <!--
+                        1.3.4:
+                        - Zapisywanie listy przy zamknięciu okna i przywracanie jej po otwarciu
+                        - Opcje "wyczyść listę"
+                        - setTimeout przy polu "Zapamiętaj" działa poprawnie, tj. liczy czas od 
+                          wpisania ostatniego błędnego
+                        - dopasowania
+                        - import po średniku
+                            
                         1.3.3:
                         - Nowa czcionka
                         - Wybór nowa/stara czcionka
@@ -220,22 +228,25 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                         <div class="cent">
                             <input class="wordlist-setting" type="text" placeholder="tytuł" data-var="title" />
                             <input class="wordlist-setting" type="text" placeholder="autor" data-var="author" />
-                            <!-- 
-                            <br />
-                            <span>Ustawienia zaawansowane — </span>
-                            <div class="btn btn-primary btn-small" id="wordlist-math">wzory matematyczne</div>
-                            <div class="btn btn-primary btn-small" id="wordlist-regexp">wyrażenia regularne</div>
-                            -->
+                            
                             <br clear="all" /><br />
+                            
                             <span>Import/eksport listy — </span>
-                            <div class="btn btn-danger btn-small" id="wordlist-purge">Wyczyść listę</div>
+                            <div class="btn btn-danger btn-small" id="wordlist-purge" rel="popover"
+                            data-title="Czy na pewno wyczyścić listę?" data-placement="top" data-trigger="focus"
+                            data-content="&lt;button id=&quot;wordlist-purge-confirm&quot; class=&quot;btn btn-danger&quot;&gt; Wyczyść &lt;/button&gt;
+                            &lt;button id=&quot;wordlist-purge-cancel&quot; class=&quot;btn btn-primary&quot;&gt; Anuluj &lt;/button&gt;">
+                                Wyczyść listę
+                            </div>
                             <div class="btn btn-small" id="wordlist-export">Eksport</div>
                             <div class="btn btn-small" id="wordlist-import">Import</div>
                             
-                            <span style="margin-left: 4em;">Narzędzia — </span>
+                            <span style="line-height: 18px; vertical-align: middle; margin-left: 4em;">Narzędzia — </span>
                             <div class="btn btn-small" id="wordlist-reverse"
                             rel="tooltip" title="Zamień pytanie ←→ odpowiedź">Odwróć</div>
                             
+                            <span style="line-height: 18px; vertical-align: middle; margin-left: 4em;">Zaawansowane — </span>
+                            <div class="btn btn-primary btn-small wordlist-setting" data-var="regexp">dopasowania</div>
                         </div>
                     </div>
                     
@@ -335,14 +346,14 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                         <input type="checkbox" id="input07" data-var="enableAnim" />
                                     </div>
                                 </div>
-                                
+                                <!--
                                 <div class="control-group">
                                     <label class="control-label" for="input05">Czas wyświetlania animacji [ms]</label>
                                     <div class="controls">
                                         <input type="text" class="input-mini" id="input05" data-var="cardAnimTime" disabled="disabled" /> (0; +&infin;)
                                     </div>
                                 </div>
-                                
+                                -->
                                 <div class="control-group">
                                     <label class="control-label" for="input05">Liczba powtórzeń każdego słowa </label>
                                     <div class="controls">
@@ -356,6 +367,13 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                         <input type="text" class="input-mini" id="input08" data-var="wordListChunk" /> &lt;1, +&infin;)
                                     </div>
                                 </div>
+                                
+                                <div class="control-group">
+                                    <label class="control-label" for="input14">Separator importu</label>
+                                    <div class="controls">
+                                        <input type="text" class="input-mini" id="input14" data-var="separator" />
+                                    </div>
+                                </div>
                                 </div>
                                 <div class="span6">
                                 <div class="control-group">
@@ -366,7 +384,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                 </div>
                                 
                                 <div class="control-group">
-                                    <label class="control-label" for="input10">W przypadku błędnej odpowiedzi, pokazuj wpisany tekst</label>
+                                    <label class="control-label" for="input10">Pokazuj błędną odpowiedź w polu Zapamiętaj</label>
                                     <div class="controls">
                                         <input type="checkbox" id="input10" data-var="incorrectShow" />
                                     </div>
@@ -392,6 +410,8 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                         </label>
                                     </div>
                                 </div>
+                                
+                                
                                 
                                 <div class="control-group">
                                     <label class="control-label" for="input12">Opcje czcionek</label>

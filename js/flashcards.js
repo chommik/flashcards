@@ -302,7 +302,7 @@ Flashcards = {
     refreshMetadata: function() {
         $(".wordlist-setting[data-var=title]").val(State.wordset.title);
         $(".wordlist-setting[data-var=author]").val(State.wordset.author);
-        State.wordset.regexp == 1 ? $(".wordlist-setting[data-var=regexp]").addClass("active") : undefined
+        State.wordset.regexp == 1 ? $(".wordlist-setting[data-var=regexp]").addClass("active") : $(".wordlist-setting[data-var=regexp]").removeClass("active")
     },
     
     appendWordlistTable: function(id, question, answer) {
@@ -392,6 +392,7 @@ Flashcards = {
         State.wordset = { };
         Flashcards.refreshWordList();  
         Flashcards.refreshMetadata();
+        $("#wordlist-purge").popover('hide');
     },
     
     updateFontSetting: function() {

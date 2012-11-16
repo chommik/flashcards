@@ -220,6 +220,9 @@ Flashcards = {
         var text = $("#import-modal textarea").val().trim();
         var newList = false;
         
+        if (this.id == "btn-add") var add = true;
+        else var add = false;
+        
         $("#loading").show();
         $("#import-modal").modal('hide');
         
@@ -247,7 +250,12 @@ Flashcards = {
             });
             
         } else {
-            State.wordset = newList;
+            if (add == true) {
+                State.wordset.words = State.wordset.words.concat(newList.words);
+            }
+            else {                
+                State.wordset = newList;
+            }
             Flashcards.refreshWordList();
             
             $.notifyBar({
@@ -458,6 +466,8 @@ Flashcards = {
             $("#import-modal textarea").focus();
         });
         $("#btn-import").click(Flashcards.importList);
+        $("#btn-add").click(Flashcards.importList);
+        
         $("#wordlist-export").click(function() {
             Flashcards.exportList();
             $('#export-modal').modal("show"); 

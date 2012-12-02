@@ -64,8 +64,11 @@
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: 1.3.5
+                        Aktualna wersja: 1.3.6
                         <!--
+                        1.3.6:
+                        - informacja, w którym miejscu jest błąd importu
+                        
                         1.3.5:
                         - dopisywanie do listy
                         
@@ -263,6 +266,10 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                             Wklej w pole poniżej paczkę z pytaniami:
                             <br />
                             <textarea></textarea>
+                            <div class="alert hidden alert-error">
+  								<button type="button" class="close" data-dismiss="alert">×</button>
+  								<strong>Błąd</strong>: <span>.</span>
+							</div>
                         </div>
                         <div class="modal-footer">
                             <div class="btn btn-success" id="btn-import">Zaimportuj</div>

@@ -224,7 +224,6 @@ Flashcards = {
         else var add = false;
         
         $("#loading").show();
-        $("#import-modal").modal('hide');
         
         try {
             if (text[0] != "{") {
@@ -232,7 +231,7 @@ Flashcards = {
                 var temp2List = []
                 for (i in tempList) {
                     var word = tempList[i].split(';')
-                    if (word.length != 2) throw false;
+                    if (word.length != 2) throw 'Błąd w linii: "' + tempList[i] + '"';
                     temp2List.push(word);
                 }
                 newList = { words: temp2List };
@@ -240,16 +239,16 @@ Flashcards = {
             else {
                 newList = JSON.parse(text);
             }
-        } catch(err) { var newList = false; }
+        } catch(err) {
+        	err = err.toString();
+        	var alert = $("#import-modal .alert").clone();
+        	$(alert).removeClass('hidden');
+        	$(alert).find('span').html(err);
+        	document.querySelector("#import-modal .modal-body").appendChild(alert[0]);
+        	var newList = false;
+        }
         
-        if (!newList) {        
-            $.notifyBar({
-                html: "Błędna paczka.",
-                cls: "error",
-                delay: 1500
-            });
-            
-        } else {
+        if (newList) { 
             if (add == true) {
                 State.wordset.words = State.wordset.words.concat(newList.words);
             }
@@ -258,6 +257,9 @@ Flashcards = {
             }
             Flashcards.refreshWordList();
             
+            $("#import-modal .alert:not(.hidden)").remove()
+            
+            $("#import-modal").modal('hide');
             $.notifyBar({
                    html: "Załadowano nowe słowa.",
                    delay: 1500
@@ -265,6 +267,7 @@ Flashcards = {
             Achievements.signal('importList');
         }
         $("#loading").hide();
+        
     },
     
     addWord: function() {

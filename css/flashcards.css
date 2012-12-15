@@ -467,3 +467,7 @@ label, input, button, select, textarea {
     text-align: center;
     margin: inherit auto;
 }
+
+.highlight {
+	background-color: rgba(120, 120, 120, 0.5);
+}

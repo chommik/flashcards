@@ -230,7 +230,7 @@ Flashcards = {
                 var tempList = text.split('\n');
                 var temp2List = []
                 for (i in tempList) {
-                    var word = tempList[i].split(';')
+                    var word = tempList[i].split(Flashcards.config.get("separator"));
                     if (word.length != 2) throw 'Błąd w linii: "' + tempList[i] + '"';
                     temp2List.push(word);
                 }
@@ -282,6 +282,9 @@ Flashcards = {
         
         Achievements.signal('addWord');
         $("#wordlist").scrollTop(99999999999);
+        
+        $("#wordlist-question,#wordlist-answer").val('')
+        $("#wordlist-question").focus();
     },
     
     exportList: function() {
@@ -310,6 +313,8 @@ Flashcards = {
     
     appendWordlistTable: function(id, question, answer) {
         var tr = document.createElement("tr");
+        tr.dataset.id = id;
+        
         var num = document.createElement("td");
         num.innerHTML = (parseInt(id) + 1).toString();
         
@@ -320,7 +325,8 @@ Flashcards = {
         answerTd.innerHTML = answer;
         
         var removeTd = document.createElement("td");
-        removeTd.innerHTML = "<a class=\"btn btn-mini wordlist-remove\" data-id=\"" + id + "\"><i class=\"icon-minus-sign\"></i>Usuń</a>";
+        removeTd.innerHTML = "<a class=\"btn btn-mini wordlist-remove\"><i class=\"icon-minus-sign\"></i></a> " + 
+        					 "<a class=\"btn btn-mini wordlist-edit\"><i class=\"icon-edit\"></i></a>";
         
         
         
@@ -398,6 +404,50 @@ Flashcards = {
         $("#wordlist-purge").popover('hide');
     },
     
+    removeWord: function(arrayId) {
+    	Flashcards.cancelEdit();
+    	delete State.wordset.words[arrayId];
+        State.wordset.words = State.wordset.words.slice(); // Some dirty hacks
+        State.wordset.words = State.wordset.words.filter(function(x){ return x != undefined});
+        	// Don't know why too.
+        Flashcards.refreshWordList();
+    },
+    
+    editWord: function(arrayId) {
+    	$("#wordlist-question").val(State.wordset.words[arrayId][0]);
+        $("#wordlist-answer").val(State.wordset.words[arrayId][1]);
+        $("#wordlist-id").val(arrayId + 1);
+        
+        $("#wordlist tr[data-id=" + arrayId + "]").addClass('highlight');
+        
+        $("#wordlist-change,#wordlist-cancel").attr('disabled', false);
+        $("#wordlist-add").attr('disabled', true);
+        
+    },
+    
+    cancelEdit: function() {
+    	if ($("#wordlist-id").val() == "") return;
+    	
+    	$("#wordlist tr.highlight").removeClass('highlight');
+    	$("#wordlist-id,#wordlist-answer,#wordlist-question").val("");
+        $("#wordlist-change,#wordlist-cancel").attr('disabled', true);
+        $("#wordlist-add").attr('disabled', false);
+    },
+    
+    submitEditWord: function() {
+    	var arrayId = parseInt($("#wordlist-id").val() - 1);
+    	
+    	State.wordset.words[arrayId][0] = $("#wordlist-question").val();
+    	State.wordset.words[arrayId][1] = $("#wordlist-answer").val();
+    	
+    	$("#wordlist tr.highlight").removeClass('highlight');
+    	
+        $("#wordlist-id,#wordlist-question,#wordlist-answer").val("");
+        $("#wordlist-change,#wordlist-cancel").attr('disabled', true);
+        $("#wordlist-add").attr('disabled', false);
+        Flashcards.refreshWordList();
+    },
+    
     updateFontSetting: function() {
         Flashcards.config.get('font300') ? $("body").addClass("font-300") : $("body").removeClass("font-300");
         Flashcards.config.get('fontOld') ? $("body").addClass("font-classic") : $("body").removeClass("font-classic");
@@ -439,15 +489,15 @@ Flashcards = {
         });
         $("#wordlist-answer").keypress(function(event) {
             if (event.keyCode == 13) { // 13 - Enter
-                Flashcards.addWord();
-                $("#wordlist-question,#wordlist-answer").val('')
-                $("#wordlist-question").focus();
+            	if ($("#wordlist-id").val() == "") {
+                	Flashcards.addWord();
+              	} else {
+              		Flashcards.submitEditWord();
+              	}
             }
         });
         $("#wordlist-add").click(function(event) {
             Flashcards.addWord();
-            $("#wordlist-question,#wordlist-answer").val('')
-            $("#wordlist-question").focus();
         });
         $("#wordlist-question").keypress(function(event) {
             if (event.keyCode == 13) { // 13 - Enter
@@ -559,6 +609,10 @@ Flashcards = {
             $("#wordlist-purge").popover('toggle');
         });
         
+        $("#wordlist-cancel").click(Flashcards.cancelEdit);
+        
+        $("#wordlist-change").click(Flashcards.submitEditWord);
+        
         $("body").on('click', '#wordlist-purge-cancel', function() {
             $("#wordlist-purge").popover('hide');
         });
@@ -568,12 +622,14 @@ Flashcards = {
         });
         
         $("#wordlist").on('click', '.wordlist-remove', function() {
-            var arrayId = parseInt($(this).data('id'));
-            delete State.wordset.words[arrayId];
-            State.wordset.words = State.wordset.words.slice(); // Some dirty hacks
-            State.wordset.words = State.wordset.words.filter(function(x){ return x != undefined});
-                // Don't know why too. 
-            Flashcards.refreshWordList();
+            var arrayId = parseInt($(this).parents('tr').data('id'));
+            Flashcards.removeWord(arrayId);
+        });
+        
+        $("#wordlist").on('click', '.wordlist-edit', function() {
+        	var arrayId = parseInt($(this).parents('tr').data('id'));
+        	Flashcards.cancelEdit();
+        	Flashcards.editWord(arrayId);
         });
         
         $(window).unload(function() {
@@ -607,6 +663,7 @@ Flashcards = {
             case 10: url = '/img/wallp/10.jpg'; break;
             case 11: url = '/img/wallp/11.jpg'; break;
             case 12: url = '/img/wallp/12.jpg'; break;
+            case 13: url = 'http://static.chommik.eu/wallpaper'; break;
             default: url = id;
         };
         Flashcards.config.set('wallpaper', url);

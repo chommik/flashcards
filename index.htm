@@ -64,53 +64,7 @@
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: 1.3.6
-                        <!--
-                        1.3.6:
-                        - informacja, w którym miejscu jest błąd importu
-                        
-                        1.3.5:
-                        - dopisywanie do listy
-                        
-                        1.3.4:
-                        - Zapisywanie listy przy zamknięciu okna i przywracanie jej po otwarciu
-                        - Opcje "wyczyść listę"
-                        - setTimeout przy polu "Zapamiętaj" działa poprawnie, tj. liczy czas od 
-                          wpisania ostatniego błędnego
-                        - dopasowania
-                        - import po średniku
-                            
-                        1.3.3:
-                        - Nowa czcionka
-                        - Wybór nowa/stara czcionka
-                        - Odwracanie listy
-                        
-                        1.3.2:
-                        - Więcej tapet, oznaczenie żółtym kolorem dużych plików
-                        - Jeszcze więcej achievementów
-                            
-                        1.3.1:
-                        - Więcej achievementów
-                        - Obsługa więcej niż jednego osiągnięcia na ekranie
-                            
-                        1.3.0:
-                        - Achievementy
-                        
-                        1.2.1:
-                        - Dodane pole "podano"
-                        - Update Bootstrapa
-                        
-                        1.2.0: 
-                        - Konami Code
-                        - Link "Pomoc"
-
-                        1.1.0:
-                        - Coś, czego nie pamiętam.
-
-                        1.0.0: 
-                        - Pierwsza wersja live
-
-                        -->
+                        Aktualna wersja: 1.3.7
                         <!-- /WERSJA -->
                     </div>
                     <div class="well">
@@ -225,9 +179,12 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                     </div>
                     <div class="widget" id="wordlist-control">
                         <div class="cent">
+                        	<input type="text" id="wordlist-id" class="span1" disabled="disabled" placeholder="-nowy-" />
                             <input type="text" id="wordlist-question" class="span3" placeholder="pytanie" />
                             <input type="text" id="wordlist-answer" class="span3" placeholder="odpowiedź" /> 
-                            <div class="btn btn-primary" id="wordlist-add">Dodaj</div>
+                            <button class="btn btn-primary" id="wordlist-add">Dodaj</button>
+                            <button disabled="disabled" class="btn btn-primary" id="wordlist-change">Zmień</button>
+                            <button disabled="disabled" class="btn btn-warning" id="wordlist-cancel">Anuluj</button>
                         </div>
                     </div>
                     <div class="widget" id="wordlist-settings">
@@ -453,6 +410,8 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                             <div class="btn btn-mini btn-warning" onclick="Flashcards.setWallpaper(10)">A</div>
                                             <div class="btn btn-mini" onclick="Flashcards.setWallpaper(11)">B</div>
                                             <div class="btn btn-mini" onclick="Flashcards.setWallpaper(12)">C</div>
+                                            <div class="btn btn-mini btn-primary" onclick="Flashcards.setWallpaper(13)"
+                                            rel="tooltip" title="Tapeta na dziś – zmieniana codziennie">na dziś</div>
                                         </p>
                                     </div>
                                 </div>

@@ -471,3 +471,8 @@ label, input, button, select, textarea {
 .highlight {
 	background-color: rgba(120, 120, 120, 0.5);
 }
+
+#wordlist table td:last-child {
+	text-align: center;
+	width: 50pt;
+}

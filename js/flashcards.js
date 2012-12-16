@@ -108,22 +108,48 @@ Flashcards = {
         Flashcards.updateStats();
     },
     
+    prepareRegexp: function(word) {
+    	// przed wywołaniem funkcji należy zamienić nawiasy () na [], żeby nie kolidowały z wyrażeniem regularnym. 
+    	// Funkcja sama później zmieni na odpowiednie.
+    	
+    	// Użytkownik może wydłużyć słowo z alternatywy dodając zamiast spacji _, np. "the_foo/bar".
+    	// Alternatywy można tworzyć standardowo, jak regexp: "a|the foo"
+    	
+    	// Czy mamy do czynienia z grupą?
+    	if (word.indexOf('[') != -1) {
+    		// Tak. Uruchom funkcję jeszcze raz na każdej mniejszej podgrupie.
+    		var groups = word.match(/\[(.+?)\]( ?)/g);
+    		for (i in groups) { // grupy postaci "[a/b/c/d]" należy zamienić na regexp
+    			if (groups[i].slice(-1) == ' ') { // spacja na końcu wyrazu - przypadek "[foo] bar"				
+	    			var group = groups[i].slice(1,-2);
+	    			var space = '( |)';
+    			} else {
+    				var group = groups[i].slice(1,-1);
+    				var space = '';
+    			}
+    			word = word.replace(groups[i], "(" + Flashcards.prepareRegexp(group) + "|)" + space);
+    		}
+    		return "^" + Flashcards.prepareRegexp(word) + "$";
+    	}
+    	else {
+    		// Nie. Zamień teraz alternatywy - "a/b/c"
+    		chunks = word.split('/');
+			if (chunks.length > 1)
+			{
+		    	var str = "((" + chunks.join('|') + ")(\/|)){" + chunks.length + "}";
+			} else {
+			    var str = chunks[0];
+			}
+			return str;
+		}
+    },    
+    
     checkAnswer: function(a, b) { // a: answer, b: question
           if (State.wordset.regexp == 1) {
-              var flags = Flashcards.config.get('matchCase') ? "i" : "";
-              // Przerobienie "uproszczonej" formy regexpa na prawidłową
-              var chunks = b.split('/');
-              for (i in chunks)
-              {
-                  chunks[i] = chunks[i].replace(/\((.+)\) (.+)/, '($1 |)$2');
-              }
-              if (chunks.length > 1)
-              {
-                  var str = "^((" + chunks.join('|') + ")(\/|)){" + chunks.length + "}$";
-              } else {
-                  var str = "^" + chunks[0] + "$";
-              }
-              var regexp = RegExp(str, flags);
+          	  var flags = Flashcards.config.get('matchCase') ? "i" : "";
+          	  var question = b.replace('(','[').replace(')',']').replace('{','(').replace('}', ')');
+              var regexp = RegExp(Flashcards.prepareRegexp(question), flags);
+          	  console.log(regexp);
               return a.match(regexp) != null;
           }
           if (!Flashcards.config.get('matchCase')) {

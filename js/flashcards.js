@@ -118,18 +118,28 @@ Flashcards = {
     	// Czy mamy do czynienia z grupą?
     	if (word.indexOf('[') != -1) {
     		// Tak. Uruchom funkcję jeszcze raz na każdej mniejszej podgrupie.
-    		var groups = word.match(/\[(.+?)\]( ?)/g);
+    		var groups = word.match(/( ?)\[(.+?)\]( ?)/g);
     		for (i in groups) { // grupy postaci "[a/b/c/d]" należy zamienić na regexp
-    			if (groups[i].slice(-1) == ' ') { // spacja na końcu wyrazu - przypadek "[foo] bar"				
-	    			var group = groups[i].slice(1,-2);
-	    			var space = '( |)';
-    			} else {
-    				var group = groups[i].slice(1,-1);
-    				var space = '';
+				var space_before = '';
+				var space_after = '';
+				var group = groups[i];
+				
+    			if (groups[i].slice(-1) == ' ') { // spacja na końcu wyrazu - przypadek "[foo] bar"		
+	    			var group = group.slice(0,-1);
+	    			var space_after = '( |)';
     			}
-    			word = word.replace(groups[i], "(" + Flashcards.prepareRegexp(group) + "|)" + space);
+    			
+    			if (groups[i].slice(0, 1) == ' ') { // spacja na początku wyrazu - przypadek "bar [foo]"
+	    			var group = group.slice(1);
+	    			var space_before = '( |)';
+    			}
+				
+				// Pozostaje nam ściąć nawiasy []
+				group = group.slice(1, -1);
+    			
+    			word = word.replace(groups[i], space_before + "(" + Flashcards.prepareRegexp(group) + "|)" + space_after);
     		}
-    		return "^" + Flashcards.prepareRegexp(word) + "$";
+    		return Flashcards.prepareRegexp(word);
     	}
     	else {
     		// Nie. Zamień teraz alternatywy - "a/b/c"
@@ -208,6 +218,8 @@ Flashcards = {
         State.statistics = { submitted: 0, wrong: 0, correct: 0 };
         
         State.wordList = [];
+        State.currentList = [];
+        State.failedList = [];
         
         for (i in State.wordset.words) {
             State.wordList.push(State.wordset.words[i].slice());
@@ -283,7 +295,11 @@ Flashcards = {
             }
             Flashcards.refreshWordList();
             
-            $("#import-modal .alert:not(.hidden)").remove()
+            $("#import-modal .alert:not(.hidden)").remove();
+            
+            if (State.wordset.regexp == 1) {
+            	$(".wordlist-setting[data-var=regexp]")
+            }
             
             $("#import-modal").modal('hide');
             $.notifyBar({

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Flashcards</title>
+  <link rel="stylesheet" href="qunit-1.10.0.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  
+  <script src="qunit-1.10.0.js"></script>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/bootstrap.js"></script>
+  <script src="/js/konami.js"></script>
+  <script src="/js/flashcards.js"></script>
+  
+  <script>
+  	/* ------ */ module("Dopasowania"); /* ------ */
+    test("Część niewymagana", function() {
+      State.wordset.regexp = 1;
+      var question = "abc [def]";
+      ok( Flashcards.checkAnswer("abc", question), "Tylko wymagane");
+      ok( Flashcards.checkAnswer("abc def", question), "Podana całość");
+      ok( !Flashcards.checkAnswer("abc ddd", question), "Podano za dużo");
+      ok( !Flashcards.checkAnswer("asd", question), "Podano nieprawidłową część wymaganą");
+    });
+
+    test("Kilka odpowiedzi", function() {
+      State.wordset.regexp = 1;
+      var question = "(a/b/c/d)";
+      ok( Flashcards.checkAnswer("a/b/c/d", question), "Kolejność oryginalna");
+      ok( Flashcards.checkAnswer("a/c/b/d", question), "Kolejność inna");
+      ok( !Flashcards.checkAnswer("a/b/c", question), "Podane za mało wyrazów");
+    });
+    
+    test("Alternatywa", function() {
+    	State.wordset.regexp = 1;
+      	var question = "a {a|b}";
+      	ok( Flashcards.checkAnswer("a a", question), "Poprawne - opcja 1.");
+      	ok( Flashcards.checkAnswer("a b", question), "Poprawne - opcja 2.");
+      	ok( !Flashcards.checkAnswer("a x", question), "Błąd w alteratywie");
+      	ok( !Flashcards.checkAnswer("x a", question), "Błąd w części stałej");
+    });
+
+    test("Kombinacje", function() {
+      State.wordset.regexp = 1;
+      var question = "a [a|x]";
+      ok( Flashcards.checkAnswer("a a", question), "Poprawne - podano całość, wariant 1");
+      ok( Flashcards.checkAnswer("a x", question), "Poprawne - podano całość, wariant 2");
+      ok( Flashcards.checkAnswer("a", question), "Poprawne - podano tylko wymagane");
+      ok( !Flashcards.checkAnswer("a f", question), "Podana błędna częśc opcjonalna");
+      ok( !Flashcards.checkAnswer("s", question), "Podana tylko błędna część wymagana");
+      ok( !Flashcards.checkAnswer("f a", question), "Podana całość, błędna część wymagana");
+    });
+  </script>
+</body>
+</html>

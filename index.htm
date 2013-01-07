@@ -461,6 +461,13 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
             <script src="/js/konami.js"></script>
             <script src="/js/flashcards.js"></script>
             
+            <script type="text/javascript">
+            	$(document).load(function() {
+    				Flashcards.init();
+    				Achievements.init();
+				}));
+            </script>
+            
             <audio src="http://static.chommik.eu/ok.ogg" id="snd-ok" autobuffer />
             <audio src="http://static.chommik.eu/error.ogg" id="snd-err" autobuffer />
     </body>

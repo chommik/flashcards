@@ -158,7 +158,7 @@ Flashcards = {
           if (State.wordset.regexp == 1) {
           	  var flags = Flashcards.config.get('matchCase') ? "i" : "";
           	  var question = b.replace('(','[').replace(')',']').replace('{','(').replace('}', ')');
-              var regexp = RegExp(Flashcards.prepareRegexp(question), flags);
+              var regexp = RegExp("^" + Flashcards.prepareRegexp(question) + "$", flags);
           	  console.log(regexp);
               return a.match(regexp) != null;
           }
@@ -1133,8 +1133,3 @@ Whoami = {
     webkit: window.navigator.userAgent.search("AppleWebKit"),
     firefox: window.navigator.userAgent.search("Firefox")
 }
-
-$(function() {
-    Flashcards.init();
-    Achievements.init();
-});

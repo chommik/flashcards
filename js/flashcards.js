@@ -157,7 +157,7 @@ Flashcards = {
     checkAnswer: function(a, b) { // a: answer, b: question
           if (State.wordset.regexp == 1) {
           	  var flags = Flashcards.config.get('matchCase') ? "i" : "";
-          	  var question = b.replace('(','[').replace(')',']').replace('{','(').replace('}', ')');
+          	  var question = b.replace(/\(/g,'[').replace(/\)/g,']').replace(/\{/g,'(').replace(/\}/g, ')');
               var regexp = RegExp("^" + Flashcards.prepareRegexp(question) + "$", flags);
           	  console.log(regexp);
               return a.match(regexp) != null;
@@ -283,6 +283,7 @@ Flashcards = {
         	$(alert).removeClass('hidden');
         	$(alert).find('span').html(err);
         	document.querySelector("#import-modal .modal-body").appendChild(alert[0]);
+        	$("#import-modal-help").removeClass("hidden");
         	var newList = false;
         }
         
@@ -296,6 +297,7 @@ Flashcards = {
             Flashcards.refreshWordList();
             
             $("#import-modal .alert:not(.hidden)").remove();
+            $("#import-modal-help").addClass("hidden");
             
             if (State.wordset.regexp == 1) {
             	$(".wordlist-setting[data-var=regexp]")

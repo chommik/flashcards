@@ -1,3 +1,7 @@
+1.5.3:
+- przycisk pomocy przy błędnym imporcie
+- teraz dopuszczalny więcej niż jeden nawias ()/{} w dopasowaniach
+
 1.5.2:
 - dodane testy w /devel
 

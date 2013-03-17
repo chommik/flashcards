@@ -156,7 +156,7 @@ Flashcards = {
     
     checkAnswer: function(a, b) { // a: answer, b: question
           if (State.wordset.regexp == 1) {
-          	  var flags = Flashcards.config.get('matchCase') ? "i" : "";
+              var flags = Flashcards.config.get('matchCase') ? "" : "i";
           	  var question = b.replace(/\(/g,'[').replace(/\)/g,']').replace(/\{/g,'(').replace(/\}/g, ')');
               var regexp = RegExp("^" + Flashcards.prepareRegexp(question) + "$", flags);
           	  console.log(regexp);

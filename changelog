@@ -1,3 +1,9 @@
+1.5.4:
+- poprawne działanie wielu odpowiedzi (a/b/c/d)
+- wyświetlający się achievement nie blokuje przycisków
+- niepotrzebne definiowanie globali w Flashcards.prepareRegexp
+- usunięta luka z javascript injection
+
 1.5.3:
 - przycisk pomocy przy błędnym imporcie
 - teraz dopuszczalny więcej niż jeden nawias ()/{} w dopasowaniach

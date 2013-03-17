@@ -28,7 +28,7 @@
 
     test("Kilka odpowiedzi", function() {
       State.wordset.regexp = 1;
-      var question = "[a/b/c/d]";
+      var question = "{a/b/c/d}";
       ok( Flashcards.checkAnswer("a/b/c/d", question), "Kolejność oryginalna");
       ok( Flashcards.checkAnswer("a/c/b/d", question), "Kolejność inna");
       ok( !Flashcards.checkAnswer("a/b/c", question), "Podane za mało wyrazów");

@@ -119,7 +119,7 @@ Flashcards = {
     	if (word.indexOf('[') != -1) {
     		// Tak. Uruchom funkcję jeszcze raz na każdej mniejszej podgrupie.
     		var groups = word.match(/( ?)\[(.+?)\]( ?)/g);
-    		for (i in groups) { // grupy postaci "[a/b/c/d]" należy zamienić na regexp
+    		for (var i in groups) { // grupy postaci "[a/b/c/d]" należy zamienić na regexp
 				var space_before = '';
 				var space_after = '';
 				var group = groups[i];
@@ -143,10 +143,10 @@ Flashcards = {
     	}
     	else {
     		// Nie. Zamień teraz alternatywy - "a/b/c"
-    		chunks = word.split('/');
+    		var chunks = word.split('/');
 			if (chunks.length > 1)
 			{
-		    	var str = "((" + chunks.join('|') + ")(\/|)){" + chunks.length + "}";
+		    	var str = "((" + chunks.join('|') + ")(\\/| |)){" + chunks.length + "}";
 			} else {
 			    var str = chunks[0];
 			}
@@ -189,7 +189,7 @@ Flashcards = {
     
     updateCard: function() {
         var question = Flashcards.currentWord();
-        $('.card .card-word').html(question);
+        $('.card .card-word').text(question);
         $('.card input').val('').trigger('update'); // We need to trigger 'update' event in order textbox to resize
         Flashcards.updateStats();
     },
@@ -363,10 +363,10 @@ Flashcards = {
         num.innerHTML = (parseInt(id) + 1).toString();
         
         var questionTd = document.createElement("td");
-        questionTd.innerHTML = question;
+        $(questionTd).text(question);
         
         var answerTd = document.createElement("td");
-        answerTd.innerHTML = answer;
+        $(answerTd).text(answer);
         
         var removeTd = document.createElement("td");
         removeTd.innerHTML = "<a class=\"btn btn-mini wordlist-remove\"><i class=\"icon-minus-sign\"></i></a> " + 

@@ -1,3 +1,6 @@
+1.5.5:
+- nowe tło
+
 1.5.4:
 - poprawne działanie wielu odpowiedzi (a/b/c/d)
 - niepotrzebne definiowanie globali w Flashcards.prepareRegexp

@@ -57,6 +57,7 @@
                             <li>Załaduj słowa lub wpisz własne w zakładce <i>Lista słów</i></li>
                             <li>W zakładce <i>Ćwiczenia</i> przyciśnij <i>start</i></li>
                         </ul>
+                            Potrzebujesz pomocy? Zakładka <i>Pomoc</i> zawiera zestaw poradników.
                     </div>
                 </div>
                 
@@ -64,7 +65,7 @@
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: 1.5.5
+                        Aktualna wersja: <span id="flashcards-ver">1.6.0</span>
                         <!-- /WERSJA -->
                     </div>
                     <div class="well">
@@ -220,9 +221,15 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                             <h3>Import danych</h3>
                         </div>
                         <div class="modal-body">
-                            Wklej w pole poniżej paczkę z pytaniami:
-                            <br />
-                            <textarea></textarea>
+                        	<div class="center">
+                            	<input type="text" id="import-paste" class="span3" placeholder="Podaj numer paczki (z serwera)" />
+	                        </div>
+                            <div class="center" style="margin-bottom: 10px;">
+                            	<b>— LUB —</b>
+                            </div>
+                            <div class="center">
+                            	<textarea placeholder="Wklej tutaj paczkę z pytaniami"></textarea>                            
+                            </div>
                             <div class="alert hidden alert-error">
   								<button type="button" class="close" data-dismiss="alert">×</button>
   								<strong>Błąd</strong>: <span>.</span>
@@ -236,6 +243,34 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                         </div>
                     </div>
                     
+                    <div class="modal hide" id="export-upload-modal">
+                    	<div class="modal-header">
+                            <a class="close" data-dismiss="modal">×</a>
+                            <h3>Zapis na serwer</h3>
+                        </div>
+                    	<div class="modal-body">
+                    		<div class="center hide loading message">
+                    			<img src="img/loading3.gif" alt="Loading" /><br />
+                    			<b>Ładowanie…</b>
+                    		</div>
+                    		<div class="alert hide alert-success finished message">
+                    			<h4>Zapis zakończony pomyślnie.</h4>
+                    			Paczka otrzymała numer:
+                    			<div class="well well-small">123</div>
+                    			Żeby zaimportować tę paczkę, należy wpisać powyższy numer w pole importu.<br />
+                    			Najedź myszą na numer, aby go zaznaczyć.<br />
+                    		</div>
+                    		<div class="alert hide alert-error finished-error message">
+                    			<h4>Błąd eksportu</h4>
+                    			Eksport nie powiódł się. Otrzymany błąd:<br />
+                    			<pre>nieznany błąd</pre>
+                    		</div>
+                    	</div>
+                    	<div class="modal-footer">
+                    		<div class="btn btn-primary" data-dismiss="modal">Zamknij</div>
+                    	</div>
+                    </div>
+                    
                     <div class="modal hide" id="export-modal" style="display: none">
                         <div class="modal-header">
                             <a class="close" data-dismiss="modal">×</a>
@@ -246,6 +281,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                         </div>
                         <div class="modal-footer">
                             <div class="btn selectall">Zaznacz tekst</div>
+                            <div class="btn" data-dismiss="modal" id="export-upload">Zapisz na serwerze</div>
                             <div class="btn btn-primary" data-dismiss="modal">Zamknij</div>
                         </div>
                     </div>
@@ -315,14 +351,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                         <input type="checkbox" id="input07" data-var="enableAnim" />
                                     </div>
                                 </div>
-                                <!--
-                                <div class="control-group">
-                                    <label class="control-label" for="input05">Czas wyświetlania animacji [ms]</label>
-                                    <div class="controls">
-                                        <input type="text" class="input-mini" id="input05" data-var="cardAnimTime" disabled="disabled" /> (0; +&infin;)
-                                    </div>
-                                </div>
-                                -->
                                 <div class="control-group">
                                     <label class="control-label" for="input05">Liczba powtórzeń każdego słowa </label>
                                     <div class="controls">

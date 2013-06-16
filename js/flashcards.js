@@ -254,17 +254,17 @@ Flashcards = {
         }
     },
     
-    importList: function() {
-        var text = $("#import-modal textarea").val().trim();
-        var newList = false;
-        
-        if (this.id == "btn-add") var add = true;
-        else var add = false;
-        
-        $("#loading").show();
-        
-        try {
-            if (text[0] != "{") {
+    appendImportError: function(err) {
+    	var alert = $("#import-modal .alert").clone();
+    	$(alert).removeClass('hidden');
+    	$(alert).find('span').html(err);
+    	document.querySelector("#import-modal .modal-body").appendChild(alert[0]);
+    	$("#import-modal-help").removeClass("hidden");
+    	
+    },
+    
+    importByText: function(text) {
+    	if (text[0] != "{") {
                 var tempList = text.split('\n');
                 var temp2List = []
                 for (i in tempList) {
@@ -272,18 +272,49 @@ Flashcards = {
                     if (word.length != 2) throw 'Błąd w linii: "' + tempList[i] + '"';
                     temp2List.push(word);
                 }
-                newList = { words: temp2List };
+                return { words: temp2List };
             } 
             else {
-                newList = JSON.parse(text);
+                return JSON.parse(text);
+            }
+    },
+    
+    importByURL: function(pasteId) {
+    	var paste = false;
+    	$.ajax({
+    		type: "GET",
+    		url: "http://chommik.eu/pastes/" + pasteId + ".json",
+    		async: false, 	// wiem, wiem, brzydkie.
+    		dataType: 'json',
+    		success: function(data) {
+    			paste = data['paste']['content'];
+    		},
+    		error: function(xhr, status, error) {
+    			throw status;
+    		}
+    	});
+    	return paste;
+    },
+    
+    importList: function() {
+    	$("#loading").show();
+        var text = $("#import-modal textarea").val().trim();
+        var pasteId = $("#import-paste").val();
+        var newList = false;
+        
+        if (this.id == "btn-add") var add = true;
+        else var add = false;
+        
+        try {
+            if (pasteId != "") {
+            	newList = Flashcards.importByText(Flashcards.importByURL(pasteId));
+            } else if (text != "") {
+            	newList = Flashcards.importByText(text);
+            } else {
+            	throw "Nie podano nic do importu";
             }
         } catch(err) {
-        	err = err.toString();
-        	var alert = $("#import-modal .alert").clone();
-        	$(alert).removeClass('hidden');
-        	$(alert).find('span').html(err);
-        	document.querySelector("#import-modal .modal-body").appendChild(alert[0]);
-        	$("#import-modal-help").removeClass("hidden");
+        	Flashcards.appendImportError(err.toString());
         	var newList = false;
         }
         
@@ -305,9 +336,13 @@ Flashcards = {
             
             $("#import-modal").modal('hide');
             $.notifyBar({
-                   html: "Załadowano nowe słowa.",
+                   html: "Załadowano nowe pytania.",
                    delay: 1500
             });
+            
+            $("#import-modal textarea").val('');
+            $('#import-paste').val('');
+            
             Achievements.signal('importList');
         }
         $("#loading").hide();
@@ -336,6 +371,33 @@ Flashcards = {
         $("#export-modal .tobase64").attr('disabled', false);
         
         Achievements.signal('exportList');
+    },
+    
+    uploadList: function() {
+    	$("#export-upload-modal .message").addClass("hide");
+    	$("#export-upload-modal .loading").removeClass("hide");
+    	$("#export-upload-modal").modal('show');
+    	$.ajax({
+    		type: "POST",
+    		url: "http://chommik.eu/pastes.json",
+    		dataType: 'json',
+    		data: {
+    			paste: {
+    				content: $("#export-modal textarea").val(),
+    				author: "Flashcards " + $("#flashcards-ver").html()
+    			}
+    		},
+    		success: function(data) {
+    			$("#export-upload-modal .message").addClass("hide");
+    			$("#export-upload-modal .finished .well").html(data['paste']['id']);
+    			$("#export-upload-modal .finished").removeClass("hide");
+    		},
+    		error: function(xhr, status, data) {
+    			$("#export-upload-modal .message").addClass("hide");
+    			$("#export-upload-modal .finished-error pre").text(status + "\n\n" + data);
+    			$("#export-upload-modal .finished-error").removeClass("hide");
+    		},
+    	});
     },
     
     refreshWordList: function() {
@@ -564,6 +626,22 @@ Flashcards = {
             $('#import-modal').modal("show"); 
             $("#import-modal textarea").focus();
         });
+        
+        $("#import-paste").on('input', function() {
+        	if ($(this).val() != "") {
+        		$("#import-modal textarea").attr('disabled', true);
+        	} else {
+        		$("#import-modal textarea").attr('disabled', false)
+        	}
+        });
+        $("#import-modal textarea").on('input', function() {
+        	if ($(this).val() != "") {
+        		$("#import-paste").attr('disabled', true);
+        	} else {
+        		$("#import-paste").attr('disabled', false)
+        	}
+        });
+        
         $("#btn-import").click(Flashcards.importList);
         $("#btn-add").click(Flashcards.importList);
         
@@ -584,6 +662,11 @@ Flashcards = {
         $("#export-modal .selectall").click(function(e) {
            $("#export-modal textarea").select();
         });
+        
+        $("#export-upload").click(Flashcards.uploadList);
+        $("#export-upload-modal .well").mouseenter(function() {
+        	$(this).selectText();
+        })
         
         $("#wordlist-reverse").click(Flashcards.reverseList);
         

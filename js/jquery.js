@@ -76,3 +76,22 @@ function b64_encode( str ) {
 function b64_decode( str ) {
     return decodeURIComponent(unescape(window.atob( str )));
 }
+
+// From http://jsfiddle.net/edelman/KcX6A/1506/
+jQuery.fn.selectText = function(){
+    var doc = document
+        , element = this[0]
+        , range, selection
+    ;
+    if (doc.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    } else if (window.getSelection) {
+        selection = window.getSelection();        
+        range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+};

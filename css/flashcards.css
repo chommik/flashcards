@@ -279,8 +279,8 @@ label,legend {
 }
 
 #import-modal textarea {
-    width: 98%;
-    height: 15em;
+    height: 13em;
+    width: 95%;
     font-family: monospace;
 }
 #debug-modal textarea {
@@ -290,7 +290,7 @@ label,legend {
 }
 
 #export-modal textarea {
-    width: 98%;
+    width: 96%;
     height: 20em;
     font-family: monospace;
 }
@@ -475,4 +475,12 @@ label, input, button, select, textarea {
 #wordlist table td:last-child {
 	text-align: center;
 	width: 50pt;
+}
+
+.finished .well {
+	text-align: center;
+	font-size: 3em;
+	width: 50%;
+	margin: 0 auto;
+	line-height: 1em;
 }

@@ -65,7 +65,7 @@
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: <span id="flashcards-ver">1.6.0</span>
+                        Aktualna wersja: <span id="flashcards-ver">1.6.1</span>
                         <!-- /WERSJA -->
                     </div>
                     <div class="well">
@@ -425,23 +425,25 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                     <label class="control-label" for="input06">URL tapety</label>
                                     <div class="controls">
                                         <input type="text" class="input-large" id="input06" data-var="wallpaper" />
-                                        <p class="help-block"><strong>Pomoc:</strong>
+                                        <br />
+                                        <div id="wallpaper-buttons">                                        	
+                                        	<div class="btn btn-mini" data-id="1">1</div>
+                                            <div class="btn btn-mini btn-warning" data-id="2">2</div>
+                                            <div class="btn btn-mini btn-warning" data-id="3">3</div>
+                                            <div class="btn btn-mini" data-id="4">4</div>
+                                            <div class="btn btn-mini btn-warning" data-id="5">5</div>
+                                            <div class="btn btn-mini" data-id="6">6</div>
+                                            <div class="btn btn-mini" data-id="7">7</div>
+                                            <div class="btn btn-mini" data-id="8">8</div>
+                                            <div class="btn btn-mini" data-id="9">9</div>
+                                            <div class="btn btn-mini btn-warning" data-id="10">A</div>
+                                            <div class="btn btn-mini" data-id="11">B</div>
+                                            <div class="btn btn-mini" data-id="12">C</div>
+                                            <div class="btn btn-mini btn-primary" data-id="13" rel="tooltip" title="Tapeta na dziś – zmieniana codziennie">na dziś</div>
+                                        </div>
+                                        <div class="help-block"><strong>Pomoc:</strong>
                                             W zestawie jest 12 domyślnych tapet. Żółty przycisk oznacza pliki ok. 1MB.
-                                            <div class="btn btn-mini" onclick="Flashcards.setWallpaper(1)">1</div>
-                                            <div class="btn btn-mini btn-warning" onclick="Flashcards.setWallpaper(2)">2</div>
-                                            <div class="btn btn-mini btn-warning" onclick="Flashcards.setWallpaper(3)">3</div>
-                                            <div class="btn btn-mini" onclick="Flashcards.setWallpaper(4)">4</div>
-                                            <div class="btn btn-mini btn-warning" onclick="Flashcards.setWallpaper(5)">5</div>
-                                            <div class="btn btn-mini" onclick="Flashcards.setWallpaper(6)">6</div>
-                                            <div class="btn btn-mini" onclick="Flashcards.setWallpaper(7)">7</div>
-                                            <div class="btn btn-mini" onclick="Flashcards.setWallpaper(8)">8</div>
-                                            <div class="btn btn-mini" onclick="Flashcards.setWallpaper(9)">9</div>
-                                            <div class="btn btn-mini btn-warning" onclick="Flashcards.setWallpaper(10)">A</div>
-                                            <div class="btn btn-mini" onclick="Flashcards.setWallpaper(11)">B</div>
-                                            <div class="btn btn-mini" onclick="Flashcards.setWallpaper(12)">C</div>
-                                            <div class="btn btn-mini btn-primary" onclick="Flashcards.setWallpaper(13)"
-                                            rel="tooltip" title="Tapeta na dziś – zmieniana codziennie">na dziś</div>
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
@@ -466,7 +468,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                 </div>
                                
                 <div id="frame">
-                    <div id="bg"> </div>
+                    <div id="bg" style="display: none"> </div>
                 </div>
             </div>
                 

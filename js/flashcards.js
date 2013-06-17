@@ -565,7 +565,6 @@ Flashcards = {
         
         $(".modal").modal({show: false});
         
-        $("#bg").fadeIn();
         $(".card-input input").autoGrowInput({
            comfortZone: 40,
            minWidth: 400,
@@ -679,9 +678,16 @@ Flashcards = {
              
         });
         
+        $("#wallpaper-buttons .btn").click(function() {
+        	Flashcards.config.set('wallpaper', $(this).data('id'));
+        	Flashcards.setWallpaper();
+        });
+        
         $("#page-config input[data-var]").change(function(e) {
-            if ($(this).data('var') == "wallpaper") { 
-                Flashcards.setWallpaper($(this).val());
+            if ($(this).data('var') == "wallpaper") {
+            	Flashcards.config.set('wallpaper', $(this).val()); 
+                Flashcards.setWallpaper();
+                Achievements.signal('wallpaper');
                 return;
             }
             
@@ -769,13 +775,15 @@ Flashcards = {
                localStorage.removeItem("wordset");
                Flashcards.refreshWordList();
                Flashcards.refreshMetadata();
-           } 
+           }
+           Flashcards.setWallpaper('skipFadeOut');
         });
         
     },
     
-    setWallpaper: function(id) {
+    setWallpaper: function(skipOut) {
         var url = '';
+        var id = Flashcards.config.get('wallpaper');
         switch (id)
         {
             case 1: url = '/img/wallp/1.jpg'; break;
@@ -793,12 +801,35 @@ Flashcards = {
             case 13: url = 'http://static.chommik.eu/wallpaper'; break;
             default: url = id;
         };
-        Flashcards.config.set('wallpaper', url);
-        $("#bg").fadeOut('slow');
-        $("#bg").css('background-image', 'url("' + url + '")');
-        $("#bg").fadeIn('slow');
-        $("#input06").val(url);
         
+    	$("#loading").show();
+    	
+    	if (!skipOut) {
+    		$('#bg').fadeTo('slow', 0.00001);
+    	} else {
+    		$('#bg').fadeTo('fast', 0.00001);
+    	}
+    	
+    	$("#bg").queue(function() {
+    		// Preload image
+    		$("<img />").attr('src', url)
+    		.load(function() {
+        		$("#bg").dequeue();
+    		})
+    		.error(function() {
+    			$("#loading").hide();
+    			$('#bg').clearQueue();
+    		})
+    	});
+		$('#bg').queue(function() {
+			$(this).css('background-image', 'url("' + url + '")').dequeue();
+		});
+   		$("#bg").fadeTo('slow', 1);
+        $("#bg").queue(function() {
+        	$("#loading").hide();
+        	$("#bg").dequeue();
+        });
+        $("#input06").val(url);
         Achievements.signal('changeWallpaper', id);
     },
     

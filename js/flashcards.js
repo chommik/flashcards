@@ -11,7 +11,7 @@ Flashcards = {
         
         Achievements.signal('pageToggle', newpage);
         
-        Flashcards.track(['_trackPageview', newpage]);
+        Flashcards.track(['_trackPageview', '/' + newpage]);
     },
     submitAnswer: function() {
         if (Flashcards.config.get("enableAnim"))

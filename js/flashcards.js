@@ -10,6 +10,8 @@ Flashcards = {
         $("#page-" + newpage).addClass("active");
         
         Achievements.signal('pageToggle', newpage);
+        
+        Flashcards.track(['_trackPageview', newpage]);
     },
     submitAnswer: function() {
         if (Flashcards.config.get("enableAnim"))
@@ -21,6 +23,7 @@ Flashcards = {
         var current = State.currentList.shift().slice();
         if (current == undefined) {
             Flashcards.endTraining();
+            Flashcards.track(['_trackEvent', 'training', 'finish']);
             Achievements.signal('finish');
             return;
         }
@@ -241,6 +244,7 @@ Flashcards = {
         State.statistics.startTime = Math.floor(Date.now()/1000);
         
         Achievements.signal('start');
+        Flashcards.track(['_trackEvent', 'training', 'start', '', State.wordset.words.length]);
     },
     
     endTraining: function() {
@@ -308,8 +312,12 @@ Flashcards = {
         try {
             if (pasteId != "") {
             	newList = Flashcards.importByText(Flashcards.importByURL(pasteId));
+            	
+            	Flashcards.track(['_trackEvent', 'Wordlist', 'import', pasteId]);
             } else if (text != "") {
             	newList = Flashcards.importByText(text);
+            	
+            	Flashcards.track(['_trackEvent', 'Wordlist', 'import', 'text']);
             } else {
             	throw "Nie podano nic do importu";
             }
@@ -371,6 +379,7 @@ Flashcards = {
         $("#export-modal .tobase64").attr('disabled', false);
         
         Achievements.signal('exportList');
+        Flashcards.track(['_trackEvent', 'Wordlist', 'export']);
     },
     
     uploadList: function() {
@@ -398,6 +407,8 @@ Flashcards = {
     			$("#export-upload-modal .finished-error").removeClass("hide");
     		},
     	});
+    	
+    	Flashcards.track(['_trackEvent', 'Wordlist', 'upload']);
     },
     
     refreshWordList: function() {
@@ -460,6 +471,8 @@ Flashcards = {
             Flashcards.refreshWordList();
             
             $("#loading").fadeOut('fast');
+            
+            Flashcards.track(['_trackEvent', 'Wordlist', 'reverse']);
         }
     },
     
@@ -508,6 +521,7 @@ Flashcards = {
         Flashcards.refreshWordList();  
         Flashcards.refreshMetadata();
         $("#wordlist-purge").popover('hide');
+        Flashcards.track(['_trackEvent', 'Wordlist', 'clear']);
     },
     
     removeWord: function(arrayId) {
@@ -557,6 +571,29 @@ Flashcards = {
     updateFontSetting: function() {
         Flashcards.config.get('font300') ? $("body").addClass("font-300") : $("body").removeClass("font-300");
         Flashcards.config.get('fontOld') ? $("body").addClass("font-classic") : $("body").removeClass("font-classic");
+    },
+    
+    hideRead: function() {
+    	var read = JSON.parse(localStorage.readNews || "[]");
+    	$("#announcements-container .alert").each(function() {
+    		if (read.indexOf($(this).data('id')) > -1) {
+    			$(this).remove();
+    		}
+    	});
+    	if (!localStorage.readNews)
+    		localStorage.readNews = '[666]';
+    },
+    
+    track: function(what) {
+    	if (Flashcards.config.get('enableTracking'))
+    		_gaq.push(what);
+    },
+    
+    clickRead: function() {
+    	var read = JSON.parse(localStorage.readNews || "[]");
+    	read.push($(this).parent().data('id'));
+    	localStorage.readNews = JSON.stringify(read);
+    	$(this).parent().fadeOut('fast', function() { $(this).remove() });
     },
     
     init: function() {
@@ -725,6 +762,7 @@ Flashcards = {
         $("#btn-start").click(Flashcards.startTraining);
         $("#btn-stop").click(function() {
             Flashcards.endTraining();
+            Flashcards.track(['_trackEvent', 'training', 'cancel']);
             Achievements.signal('cancel');
         });
         
@@ -765,6 +803,12 @@ Flashcards = {
         	Flashcards.editWord(arrayId);
         });
         
+        $('#announcements-container .alert .close').click(Flashcards.clickRead);
+        
+       	$(document).ready(function() {
+       		Flashcards.hideRead();
+       	});
+        
         $(window).unload(function() {
            localStorage.wordset = JSON.stringify(State.wordset);
         });
@@ -778,7 +822,6 @@ Flashcards = {
            }
            Flashcards.setWallpaper('skipFadeOut');
         });
-        
     },
     
     setWallpaper: function(skipOut) {
@@ -849,6 +892,7 @@ Flashcards = {
         set: function(item, value) {
             localStorage[item] = value;
             Achievements.signal("configSet", item, value);
+            Flashcards.track(['_trackEvent', 'config', item, value]);
         },
         reset: function(item) {
             if (item in DefaultConfig) {
@@ -1140,7 +1184,7 @@ Achievements = {
         localStorage['achievements'] = list.join(';');
         
         Achievements.signal('achievement', achi); // We need to go deeper.
-        
+        Flashcards.track(['_trackEvent', 'achivement', achi]);
         Achievements.updateList();
     },
     
@@ -1213,7 +1257,8 @@ DefaultConfig =  {
     incorrectShow: false,
     achievementsEnable: true,
     separator: ';',
-    wallpaper: "/img/wallp/8.jpg"
+    wallpaper: "/img/wallp/8.jpg",
+    enableTracking: !window.navigator.doNotTrack
 };
 
 State = {

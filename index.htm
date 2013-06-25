@@ -54,18 +54,33 @@
                     <div class="widget" style="padding: 10px; width: 40%;">
                         <div style="font-size: 150%">Jak zacząć</div>
                         <ul>
-                            <li>Załaduj słowa lub wpisz własne w zakładce <i>Lista słów</i></li>
+                            <li>Załaduj pytania (<i>Import</i>) lub dodaj własne w zakładce <i>Lista słów</i></li>
                             <li>W zakładce <i>Ćwiczenia</i> przyciśnij <i>start</i></li>
                         </ul>
                             Potrzebujesz pomocy? Zakładka <i>Pomoc</i> zawiera zestaw poradników.
                     </div>
+                    
+                    <div id="announcements-container">
+	                	<div class="alert alert-info" data-id="666">
+	                		<a href="#" class="close">&times;</a>
+	                		<h4>Cookies i statystyki</h4>
+	                		<img src="/img/tracking-info.png" alt="image" />
+	                		<p>
+	                			<i>Flashcards</i> używa statystyk Google Analytics oraz plików cookies.
+	                			Jeżeli nie chcesz udostępniać danych statystycznych (zawierają one anonimowe informacje
+	                			np. o ustawieniach i korzystaniu z funkcji programu), wyłącz pole 
+	                			<i>Wysyłaj dane statystyczne</i> w ustawieniach.<br />
+	                			Ten komunikat pojawia się tylko raz, nie musisz klikać w „&times;” :-)
+	                		</p>
+	                	</div>
+                	</div>
                 </div>
                 
                 <div class="page" id="page-info">
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: <span id="flashcards-ver">1.6.1</span>
+                        Aktualna wersja: <span id="flashcards-ver">1.7.0</span>
                         <!-- /WERSJA -->
                     </div>
                     <div class="well">
@@ -408,6 +423,13 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                                     </div>
                                 </div>
                                 
+                                <div class="control-group">
+                                    <label class="control-label" for="input13">Wysyłaj dane statystyczne</label>
+                                    <div class="controls">
+                                        <input type="checkbox" id="input13" data-var="enableTracking" />
+                                    </div>
+                                </div>
+                                
                                 
                                 
                                 <div class="control-group">
@@ -477,19 +499,20 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
             <script src="/js/bootstrap.js"></script>
             <script src="/js/bootstrap-alert.js"></script>
             <script src="/js/bootstrap-modal.js"></script>
-            <script src="/js/bootstrap-dropdown.js"></script>
+            <!-- <script src="/js/bootstrap-dropdown.js"></script> -->
             <!-- <script src="/js/bootstrap-scrollspy.js"></script> -->
             <script src="/js/bootstrap-tab.js"></script>
             <script src="/js/bootstrap-tooltip.js"></script>
             <script src="/js/bootstrap-popover.js"></script>
             <script src="/js/bootstrap-button.js"></script>
             <script src="/js/bootstrap-collapse.js"></script>
-            <script src="/js/bootstrap-carousel.js"></script>
-            <script src="/js/bootstrap-typeahead.js"></script>
-            <script src="/js/jquery-ui.js"></script>
+            <!-- <script src="/js/bootstrap-carousel.js"></script> -->
+            <!-- <script src="/js/bootstrap-typeahead.js"></script> -->
+            <!-- <script src="/js/jquery-ui.js"></script> -->
             <script src="/js/jquery.notifyBar.js"></script>
-            <script src="/js/levenshtein.js"></script>
+            <!-- <script src="/js/levenshtein.js"></script> -->
             <script src="/js/konami.js"></script>
+            <script src="/js/prefixfree.min.js"></script>
             <script src="/js/flashcards.js"></script>
             
             <script>
@@ -498,6 +521,19 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
     				Achievements.init();
 				    });
             </script>
+            
+            <script type="text/javascript">
+			  var _gaq = _gaq || [];
+			  _gaq.push(['_setAccount', 'UA-7807169-4']);
+			  _gaq.push(['_trackPageview']);
+			  _gaq.push(['_trackPageLoadTime']);
+			  (function() {
+			  	if (!Flashcards.config.get('enableTracking')) return;
+			    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			  })();
+			</script>
             
             <audio src="http://static.chommik.eu/ok.ogg" id="snd-ok" autobuffer />
             <audio src="http://static.chommik.eu/error.ogg" id="snd-err" autobuffer />

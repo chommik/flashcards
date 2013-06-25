@@ -732,9 +732,9 @@ Flashcards = {
             if ($(this).attr('type') == 'checkbox') {
                 value = $(this).attr('checked') ? 1 : 0;
             }
-            console.log(value);
-            console.log($(this).data('var'));
+            
             Flashcards.config.set($(this).data('var'), value);
+            Flashcards.track(['_trackEvent', 'settings', $(this).data('var'), value]);
         });
         
         $("#input12,#input13").change(Flashcards.updateFontSetting);
@@ -892,7 +892,6 @@ Flashcards = {
         set: function(item, value) {
             localStorage[item] = value;
             Achievements.signal("configSet", item, value);
-            Flashcards.track(['_trackEvent', 'config', item, value]);
         },
         reset: function(item) {
             if (item in DefaultConfig) {

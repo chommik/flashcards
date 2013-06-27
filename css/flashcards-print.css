@@ -1,0 +1,103 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: bold;
+  src: local('Open Sans Bold'), url("/fnt/OpenSans-Bold.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), url("/fnt/OpenSans-Light.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: bold;
+  src: local('Open Sans Bold Italic'), url("/fnt/OpenSans-BoldItalic.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Open Sans Light Italic'), url("/fnt/OpenSans-LightItalic.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: normal;
+  src: local('Open Sans Italic'), url("/fnt/OpenSans-Italic.ttf");
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Open Sans'), url("/fnt/OpenSans-Regular.ttf");
+}
+
+* {
+    font-family: 'Open Sans', 'Droid Sans', 'verdana', 'helvetica', sans-serif;
+    font-size: 10pt;
+}
+
+body,html {
+	margin: 3pt;
+}
+
+.navbar, .btn, .page, 
+#wordlist-control, 
+#wordlist-settings div *:not(.wordlist-setting),
+.wordlist-setting[data-var="author"]{
+	display: none;
+}
+
+#page-wordlist {
+	display: block;
+}
+
+#wordlist table {
+	width: auto;
+}
+
+#wordlist {
+	width: 100%;
+}
+
+#wordlist table {
+	display: table;
+	position: relative;
+	top: 40pt;
+}
+
+.table td {
+	background-color: #fff;
+	padding: 3px;
+}
+
+thead {
+	display: table-header-group;
+}
+
+#wordlist table tr td:last-child, 
+#wordlist table tr th:last-child {
+	display: none;
+}
+
+#wordlist table tr td:nth-child(1), 
+#wordlist table tr th:nth-child(1) {
+	font-size: 8pt;
+	width: auto;
+	text-align: center;
+}
+
+.wordlist-setting[data-var="title"] {
+	display: block;
+	position: absolute;
+	top: 0;
+	border: 0;
+	font-size: 24pt;
+	line-height: 30pt;
+	width: auto;
+	height: auto;
+	color: #000;
+}

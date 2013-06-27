@@ -475,3 +475,18 @@ label, input, button, select, textarea {
 	margin-top: -21px;
 	margin-right: -11px;
 }
+
+#changelog {
+	max-height: 10em;
+	font-size: 8pt;
+	line-height: 10pt;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	font-family: monospace;
+	white-space: pre-wrap;
+}
+
+#licence {
+	font-size: 10pt;
+	line-height: 12pt;
+}

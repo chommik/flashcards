@@ -4,7 +4,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         
         <link href="/css/bootstrap.css" rel="stylesheet">
-        <link href="/css/flashcards.css" rel="stylesheet">
+        <link href="/css/flashcards.css" rel="stylesheet" media="screen">
+        <link href="/css/flashcards-print.css" rel="stylesheet" media="print">
         <link href="/css/jquery.notifyBar.css" rel="stylesheet">
         <link rel="icon" type="image/png" href="/icon.png" />
         <title>Flashcards</title>
@@ -76,28 +77,33 @@
                 	</div>
                 </div>
                 
-                <div class="page" id="page-info">
+                <div class="page row-fluid" id="page-info">
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: <span id="flashcards-ver">1.7.1</span>
+                        Aktualna wersja: <span id="flashcards-ver">1.7.2</span>
                         <!-- /WERSJA -->
                     </div>
-                    <div class="well">
-                        Użyte biblioteki:
-                        <ul class="unstyled">
-                            <li><a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></li>
-                            <li><a href="http://jquery.com">jQuery</a></li>
-                            <li><a href="http://jqueryui.com">jQuery UI</a></li>
-                            <li><a href="https://github.com/dknight/jQuery-Notify-bar">jQuery notifyBar plugin</a></li>
-                            <li><a href="/js/levenshtein.js">Levenshtein</a></li>
-                        </ul>
-                        <p>
-                            Tapety z Wikimedia Commons; wall.alphacoders.com<br />
-                            Ikony osiągnięć &copy; Blizzard Entertainment — World of Warcraft
-                        </p>
-                        <pre>
-Copyright &copy; 2012 Rafal Macyszyn &lt;chommik12 at gmail dot com&gt;
+                    <div class="well well-small">
+                    	<div class="span7">
+	                    	<h4>Lista zmian</h4>
+	                    	<pre id="changelog"></pre>
+                    	</div>
+                    	<div class="span5 pull-right">
+	                        <h4>Użyte biblioteki</h4>
+	                        <ul class="unstyled">
+	                            <li><a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></li>
+	                            <li><a href="http://jquery.com">jQuery</a></li>
+	                            <li><a href="https://github.com/dknight/jQuery-Notify-bar">jQuery notifyBar plugin</a></li>
+	                        </ul>
+                        	<p>
+                            	<b>Tapety</b>: Wikimedia Commons; wall.alphacoders.com<br />
+                            	<b>Ikony osiągnięć</b>: &copy; Blizzard Entertainment — World of Warcraft
+                        	</p>
+                    	</div>
+                    	<br style="clear: both" />
+                        <pre id="licence">
+Copyright &copy; 2012 Rafal Macyszyn &lt;chommik12&#64;gmail.com&gt;
 
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is 
 hereby granted, provided that the above copyright notice and this permission notice appear in all copies.

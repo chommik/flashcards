@@ -756,7 +756,7 @@ Flashcards = {
             State.wordset[$(this).data('var')] = value;
         });
         
-        $("#bg").css('background-image', 'url("' + Flashcards.config.get('wallpaper') + '")');
+        $("#bg").css('background-image', 'url("' + Flashcards.getWallpaperURL() + '")');
         
         $(".card-buttons .submit").click(Flashcards.submitAnswer);
         $("#btn-start").click(Flashcards.startTraining);
@@ -807,6 +807,8 @@ Flashcards = {
         
        	$(document).ready(function() {
        		Flashcards.hideRead();
+       		
+       		$("#changelog").load('/changelog');
        	});
         
         $(window).unload(function() {
@@ -824,10 +826,10 @@ Flashcards = {
         });
     },
     
-    setWallpaper: function(skipOut) {
-        var url = '';
-        var id = Flashcards.config.get('wallpaper');
-        switch (id)
+    getWallpaperURL: function() {
+    	var url = '';
+    	var id = Flashcards.config.get('wallpaper');
+    	switch (id)
         {
             case 1: url = '/img/wallp/1.jpg'; break;
             case 2: url = '/img/wallp/2.jpg'; break;
@@ -844,7 +846,11 @@ Flashcards = {
             case 13: url = 'http://static.chommik.eu/wallpaper'; break;
             default: url = id;
         };
-        
+        return url;
+    },
+    
+    setWallpaper: function(skipOut) {
+    	var url = Flashcards.getWallpaperURL();
     	$("#loading").show();
     	
     	if (!skipOut) {

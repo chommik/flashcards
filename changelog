@@ -1,3 +1,7 @@
+1.8.0:
+- dodane importowanie pliku z dysku
+- dodane bezpośrednie zapisywanie pliku na dysk (nie działa w Safari)
+
 1.7.2:
 - opcja drukowania listy (CSS media="print")
 - poprawione ustawianie tapety

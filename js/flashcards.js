@@ -382,6 +382,26 @@ Flashcards = {
         Flashcards.track(['_trackEvent', 'Wordlist', 'export']);
     },
     
+    saveListBlob: function() {
+    	var blob = new Blob([$("#export-modal textarea").val()], {type: 'application/octet-stram'});
+    	var name = !!State.wordset.title ? "flashcards-" + State.wordset.title + ".txt" :
+    										"flashcards-eksport.txt";
+    	saveAs(blob, name);
+    },
+    
+    importLoadFile: function() {
+    	var file = $("#fileimport").get(0).files[0];
+    	if (!file) return;
+    	
+    	
+    	var reader = new FileReader();
+    	
+    	reader.onload = function(e) {
+    		$("#import-modal textarea").val(e.target.result).trigger('input');
+    	};
+    	reader.readAsText(file);
+    },
+    
     uploadList: function() {
     	$("#export-upload-modal .message").addClass("hide");
     	$("#export-upload-modal .loading").removeClass("hide");
@@ -702,7 +722,18 @@ Flashcards = {
         $("#export-upload").click(Flashcards.uploadList);
         $("#export-upload-modal .well").mouseenter(function() {
         	$(this).selectText();
-        })
+        });
+        
+        if (Whoami.safari) {
+        	// Apparently saving file doesn't work on Safari :(
+        	$('.savefile').remove();
+        } else {
+	        $(".savefile").click(Flashcards.saveListBlob);
+        }
+        $("#fileimport").change(Flashcards.importLoadFile);
+        $("#fileselect").click(function() {
+        	$("#fileimport").click();
+        });
         
         $("#wordlist-reverse").click(Flashcards.reverseList);
         
@@ -1296,6 +1327,7 @@ State = {
 };
 
 Whoami = {
-    webkit: window.navigator.userAgent.search("AppleWebKit"),
-    firefox: window.navigator.userAgent.search("Firefox")
-}
+    webkit: window.navigator.userAgent.search("AppleWebKit") >= 0,
+    safari: window.navigator.userAgent.search("Safari") >= 0,
+    firefox: window.navigator.userAgent.search("Firefox") >= 0
+};

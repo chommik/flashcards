@@ -81,7 +81,7 @@
                     <div class="well">
                         <h1>Flashcards</h1>
                         <!-- WERSJA -->
-                        Aktualna wersja: <span id="flashcards-ver">1.7.2</span>
+                        Aktualna wersja: <span id="flashcards-ver">1.8.0</span>
                         <!-- /WERSJA -->
                     </div>
                     <div class="well well-small">
@@ -245,9 +245,22 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                         	<div class="center">
                             	<input type="text" id="import-paste" class="span3" placeholder="Podaj numer paczki (z serwera)" />
 	                        </div>
-                            <div class="center" style="margin-bottom: 10px;">
+	                        
+	                        <div class="center" style="margin-bottom: 10px;">
                             	<b>— LUB —</b>
                             </div>
+                            
+                            <div class="hidden">
+	                            <input type="file" id="fileimport" accept=".txt,text/plain" />
+                            </div>
+                            <div class="center">
+	                            <div class="btn" id="fileselect">Wybierz plik z dysku</div>
+                            </div>
+                            
+                            <div class="center" style="margin-top: 10px; margin-bottom: 10px;">
+                            	<b>— LUB —</b>
+                            </div>
+                            
                             <div class="center">
                             	<textarea placeholder="Wklej tutaj paczkę z pytaniami"></textarea>                            
                             </div>
@@ -301,7 +314,8 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                             <textarea></textarea>
                         </div>
                         <div class="modal-footer">
-                            <div class="btn selectall">Zaznacz tekst</div>
+                            <div class="btn selectall pull-left">Zaznacz tekst</div>
+                            <div class="btn savefile">Zapisz na dysku</div>
                             <div class="btn" data-dismiss="modal" id="export-upload">Zapisz na serwerze</div>
                             <div class="btn btn-primary" data-dismiss="modal">Zamknij</div>
                         </div>
@@ -502,6 +516,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
                 
             </div>
             <script src="/js/jquery.js"></script>
+            
             <script src="/js/bootstrap.js"></script>
             <script src="/js/bootstrap-alert.js"></script>
             <script src="/js/bootstrap-modal.js"></script>
@@ -515,10 +530,14 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p
             <!-- <script src="/js/bootstrap-carousel.js"></script> -->
             <!-- <script src="/js/bootstrap-typeahead.js"></script> -->
             <!-- <script src="/js/jquery-ui.js"></script> -->
+            
             <script src="/js/jquery.notifyBar.js"></script>
             <!-- <script src="/js/levenshtein.js"></script> -->
             <script src="/js/konami.js"></script>
             <script src="/js/prefixfree.min.js"></script>
+            <script src="/js/Blob.js"></script>
+            <script src="/js/FileSaver.js"></script>
+            
             <script src="/js/flashcards.js"></script>
             
             <script>

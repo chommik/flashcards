@@ -252,7 +252,7 @@ label,legend {
 }
 
 #import-modal textarea {
-    height: 13em;
+    height: 10em;
     width: 95%;
     font-family: monospace;
 }

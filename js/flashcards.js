@@ -220,7 +220,8 @@ Flashcards = {
         } else {
             // Show and refresh text input and check button
             $('#card-check').removeClass('hidden');
-            $('.card-input').removeClass('hidden').val('').trigger('update'); // We need to trigger 'update' event in order textbox to resize
+            $('.card-input').removeClass('hidden');
+            $('.card input').val('').trigger('update'); // We need to trigger 'update' event in order textbox to resize
         }
     },
     

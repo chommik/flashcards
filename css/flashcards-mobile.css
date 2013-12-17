@@ -1,0 +1,158 @@
+#bg, #navbar {
+    display: none;
+}
+
+#brand {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    padding: 0;
+    margin: 0 10px 10px 0;
+    font-size: 250%;
+    opacity: 0.5;
+}
+
+#navbar-mobile,#mobile-navbar-btn {
+    display: block;
+    position: fixed;
+    height: 50px;
+    z-index: 10;
+}
+
+#mobile-navbar-btn {
+    opacity: 0.7;
+}
+
+#navbar-mobile {
+    top: 0;
+    left: 42px;
+    width: 100%;
+    display: none;
+    overflow: hidden;
+}
+
+.nav li a, .nav li {
+    display: inline-block;
+    height: 50px;
+}
+
+.navbar .nav > li > a > i {
+    font-size: 200%;
+}
+
+#navbar-mobile .navbar-inner {
+    padding: 0 3px 0 3px;
+    min-height: 1px;
+    height: 48px;
+}
+
+.modal {
+    position: absolute;
+}
+
+body {
+    position: absolute;
+    padding: 0;
+}
+
+#wrapper {
+    display: block;
+}
+
+#layout {
+    width: 95%;
+}
+
+#page-main .widget {
+    width: 80% !important;
+    margin-top: 15%;
+}
+
+#wordlist {
+    max-height: 250px;
+}
+
+#wordlist-id, #wordlist-question, #wordlist-answer {
+    display: inline-block;
+}
+
+#wordlist-id { 
+    width: 15%; 
+}
+#wordlist-question, #wordlist-answer { 
+    width: 37%; 
+}
+
+#wordlist table td {
+    max-width: 25%;
+}
+
+#import-modal textarea, #export-modal textarea {
+    height: auto;
+}
+
+#page-achi .widget {
+    max-height: none;
+    overflow: hidden;
+}
+
+.card {
+    z-index: 9;
+    height: auto;
+    min-width: 0;
+}
+
+.card-word, .card-answer {
+    font-size: 200%;
+    line-height: 200%;
+    margin-bottom: 5px;
+}
+
+.card-input input {
+    height: auto;
+    min-width: 100px;
+    font-size: 120%;
+    line-height: 120%;
+}
+
+.card-stats .progress {
+    width: 100px !important; 
+    margin: 0 auto 10px auto;
+}
+
+.card-control {
+    width: 7em;
+    bottom: 4em;
+    z-index: 0;
+    left: 10px;
+}
+
+.card-stats {
+    bottom: 4em;
+    z-index: 0;
+    right: 10px;
+}
+
+.card-remember-container {
+    width: 100%;
+    margin: 0 auto;
+    z-index: 1;
+    bottom: 10px;
+    height: 2.5em;
+}
+
+.card-buttons {
+    margin-top: 10px;
+}
+
+.card-remember {
+    max-width: 90%;
+}
+
+.card-control button {
+    width: 100%;
+    display: block;
+    margin: 3px 0;
+}

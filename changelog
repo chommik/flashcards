@@ -1,3 +1,7 @@
+1.9.0:
+- dodany tryb "zgadywania" (bez wpisywania odpowiedzi)
+- dodana wersja mobilna, na razie eksperymentalnie
+
 1.8.0:
 - dodane importowanie pliku z dysku
 - dodane bezpośrednie zapisywanie pliku na dysk (nie działa w Safari)

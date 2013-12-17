@@ -13,13 +13,18 @@ Flashcards = {
         
         Flashcards.track(['_trackPageview', '/' + newpage]);
     },
-    submitAnswer: function() {
+    submitAnswer: function(answerValue) {
         if (Flashcards.config.get("enableAnim"))
         {
             $('.card').addClass("hidden");
         }
         
         var submitted = $(".card input").val();
+        if (answerValue !== undefined) {
+            submitted = answerValue;
+            // we can get true/false from here to pass to checkAnswer()
+        }
+        
         var current = State.currentList.shift().slice();
         if (current == undefined) {
             Flashcards.endTraining();
@@ -158,6 +163,13 @@ Flashcards = {
     },    
     
     checkAnswer: function(a, b) { // a: answer, b: question
+          /* Hidden trick:
+           * Pass true or false as answer to predict the result.
+           */
+          
+          if (a === true) return true;
+          else if (a === false) return false;
+          
           if (State.wordset.regexp == 1) {
               var flags = Flashcards.config.get('matchCase') ? "" : "i";
           	  var question = b.replace(/\(/g,'[').replace(/\)/g,']').replace(/\{/g,'(').replace(/\}/g, ')');
@@ -191,10 +203,25 @@ Flashcards = {
     },
     
     updateCard: function() {
-        var question = Flashcards.currentWord();
+        // Common part
+        var question = Flashcards.currentWord(); 
         $('.card .card-word').text(question);
-        $('.card input').val('').trigger('update'); // We need to trigger 'update' event in order textbox to resize
+        $('.card-buttons .btn').addClass('hidden');
+        $(".card .card-answer").addClass('hidden');
         Flashcards.updateStats();
+
+        if (Flashcards.config.get('showAnswer'))
+        {
+            // Update answer and refresh buttons 
+            var answer = State.currentList[0][1];        
+            $(".card .card-answer").text(answer);
+            $(".card-input").addClass('hidden');
+            $('#card-show').removeClass('hidden');
+        } else {
+            // Show and refresh text input and check button
+            $('#card-check').removeClass('hidden');
+            $('.card-input').removeClass('hidden').val('').trigger('update'); // We need to trigger 'update' event in order textbox to resize
+        }
     },
     
     currentWord: function(e) {
@@ -202,7 +229,7 @@ Flashcards = {
             Flashcards.endTraining();
             return "ø";
         } else {
-            return State.currentList[0][0]; 
+            return State.currentList[0][0];
         }
     },
     
@@ -622,11 +649,13 @@ Flashcards = {
         
         $(".modal").modal({show: false});
         
-        $(".card-input input").autoGrowInput({
-           comfortZone: 40,
-           minWidth: 400,
-           maxWidth: 800 
-        });
+        if (!Whoami.mobile()) {
+            $(".card-input input").autoGrowInput({
+               comfortZone: 40,
+               minWidth: 400,
+               maxWidth: 800 
+            });
+        }
         
         $("*[rel=tooltip]").tooltip();
 
@@ -649,6 +678,20 @@ Flashcards = {
                 Flashcards.submitAnswer();
             }
         });
+        
+        $("#card-show").click(function() {
+           $("#card-show").addClass("hidden");
+           $(".card-answer,#card-correct,#card-wrong").removeClass("hidden"); 
+        });
+        
+        $("#card-correct").click(function() {
+            Flashcards.submitAnswer(true);
+        });
+        
+        $("#card-wrong").click(function() {
+            Flashcards.submitAnswer(false);
+        });
+        
         $("#wordlist-answer").keypress(function(event) {
             if (event.keyCode == 13) { // 13 - Enter
             	if ($("#wordlist-id").val() == "") {
@@ -679,8 +722,11 @@ Flashcards = {
         });
         
         $("#wordlist-import").click(function() {
-            $('#import-modal').modal("show"); 
-            $("#import-modal textarea").focus();
+            $('#import-modal').modal("show");
+            if (!Whoami.mobile())
+            {
+                $("#import-modal textarea").focus();
+            }
         });
         
         $("#import-paste").on('input', function() {
@@ -836,6 +882,10 @@ Flashcards = {
         
         $('#announcements-container .alert .close').click(Flashcards.clickRead);
         
+        $("#mobile-navbar-btn").on('click', function() {
+           $("#navbar-mobile").animate({width: 'toggle'}); 
+        });
+        
        	$(document).ready(function() {
        		Flashcards.hideRead();
        		
@@ -853,7 +903,8 @@ Flashcards = {
                Flashcards.refreshWordList();
                Flashcards.refreshMetadata();
            }
-           Flashcards.setWallpaper('skipFadeOut');
+           if (!Whoami.mobile())
+               Flashcards.setWallpaper('skipFadeOut');
         });
     },
     
@@ -881,6 +932,8 @@ Flashcards = {
     },
     
     setWallpaper: function(skipOut) {
+        if (Whoami.mobile()) return;
+        
     	var url = Flashcards.getWallpaperURL();
     	$("#loading").show();
     	
@@ -1329,5 +1382,6 @@ State = {
 Whoami = {
     webkit: window.navigator.userAgent.search("AppleWebKit") >= 0,
     safari: window.navigator.userAgent.search("Safari") >= 0,
-    firefox: window.navigator.userAgent.search("Firefox") >= 0
+    firefox: window.navigator.userAgent.search("Firefox") >= 0,
+    mobile: function() { return window.matchMedia("screen and (max-width: 768px)").matches; }
 };

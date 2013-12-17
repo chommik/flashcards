@@ -1,43 +1,6 @@
 /*  -moz-border-radius :5px;
  -webkit-border-radius: 5px; */
 
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: bold;
-  src: local('Open Sans Bold'), url("/fnt/OpenSans-Bold.ttf");
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Open Sans Light'), url("/fnt/OpenSans-Light.ttf");
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: bold;
-  src: local('Open Sans Bold Italic'), url("/fnt/OpenSans-BoldItalic.ttf");
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 300;
-  src: local('Open Sans Light Italic'), url("/fnt/OpenSans-LightItalic.ttf");
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: normal;
-  src: local('Open Sans Italic'), url("/fnt/OpenSans-Italic.ttf");
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: normal;
-  src: local('Open Sans'), url("/fnt/OpenSans-Regular.ttf");
-}
-
 .navbar {
     margin-bottom: 0;
 }
@@ -141,7 +104,7 @@ label,legend {
 }
 .card {
     background: rgba(230,230,230,0.8);
-    border: 1px solid #000;
+    /* border: 1px solid #000; */
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     -webkit-box-shadow: 0px 0px 10px #000;
@@ -167,7 +130,7 @@ label,legend {
     display: table-cell;
     vertical-align: middle;
 }
-.card-word {
+.card-word,.card-answer {
     margin: 0 auto 15px auto;
     width: 100%;
     text-align: center;
@@ -178,6 +141,11 @@ label,legend {
     display: inline-block;
     word-wrap: break-word;
 }
+
+.card-answer {
+    font-style: italic;
+}
+
 .card-input {
     margin: 0 20px;
     text-align: center;
@@ -413,7 +381,7 @@ label, input, button, select, textarea {
     font-family: inherit;
 }
 
-.card-word {
+.card-word,.card-answer {
     font-weight: 300;
 }
 
@@ -489,4 +457,8 @@ label, input, button, select, textarea {
 #licence {
 	font-size: 10pt;
 	line-height: 12pt;
+}
+
+#navbar-mobile, #brand-mobile {
+    display: none;
 }
